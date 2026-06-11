@@ -1,0 +1,43 @@
+services:
+  - type: web
+    name: femcare-backend-api
+    env: docker
+    context: ./backend
+    dockerfilePath: ./Dockerfile
+    plan: free
+    region: frankfurt
+    branch: main
+    numInstances: 1
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: femcare-prod-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+
+  - type: web
+    name: femcare-frontend-app
+    env: docker
+    context: ./frontend
+    dockerfilePath: ./Dockerfile
+    plan: free
+    region: frankfurt
+    branch: main
+    numInstances: 1
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          type: web
+          name: femcare-backend-api
+          property: host
+
+databases:
+  - name: femcare-prod-db
+    plan: free
+    region: frankfurt
+    postgresMajorVersion: 15
