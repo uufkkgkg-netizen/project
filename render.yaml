@@ -2,7 +2,7 @@ services:
   - type: web
     name: femcare-backend-api
     env: docker
-    context: ./backend
+    dockerContext: ./backend
     dockerfilePath: ./Dockerfile
     plan: free
     region: frankfurt
@@ -21,7 +21,7 @@ services:
   - type: web
     name: femcare-frontend-app
     env: docker
-    context: ./frontend
+    dockerContext: ./frontend
     dockerfilePath: ./Dockerfile
     plan: free
     region: frankfurt
