@@ -1,16 +1,17 @@
 services:
   - type: web
     name: femcare-backend-api
-    env: docker
+    runtime: docker
     dockerContext: ./backend
-    dockerfilePath: ./Dockerfile
+    dockerfilePath: ./backend/Dockerfile
     plan: free
     region: frankfurt
     branch: main
-    numInstances: 1
     envVars:
       - key: NODE_ENV
         value: production
+      - key: PORT
+        value: 10000
       - key: DATABASE_URL
         fromDatabase:
           name: femcare-prod-db
@@ -20,16 +21,17 @@ services:
 
   - type: web
     name: femcare-frontend-app
-    env: docker
+    runtime: docker
     dockerContext: ./frontend
-    dockerfilePath: ./Dockerfile
+    dockerfilePath: ./frontend/Dockerfile
     plan: free
     region: frankfurt
     branch: main
-    numInstances: 1
     envVars:
       - key: NODE_ENV
         value: production
+      - key: PORT
+        value: 3000
       - key: NEXT_PUBLIC_API_URL
         fromService:
           type: web
