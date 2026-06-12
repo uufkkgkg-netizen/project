@@ -1,7 +1,7 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 
-# نسخ ملفات الحزم
+# نسخ  ملفات الحزم
 COPY package.json ./
 COPY package-lock.json* ./
 COPY prisma ./prisma/
