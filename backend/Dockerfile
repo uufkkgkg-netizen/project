@@ -1,7 +1,11 @@
+# ---- مرحلة البناء (Builder) ----
 FROM node:20-alpine AS builder
 WORKDIR /app
 
-# نسخ  ملفات الحزم
+# تثبيت OpenSSL الضروري لعمل Prisma
+RUN apk add --no-cache openssl
+
+# نسخ ملفات الحزم
 COPY package.json ./
 COPY package-lock.json* ./
 COPY prisma ./prisma/
@@ -15,15 +19,15 @@ COPY . .
 # توليد Prisma client
 RUN npx prisma generate
 
-# بناء التطبيق (NestJS يُخرج إلى dist/src/main.js)
+# بناء التطبيق
 RUN npm run build
 
-# تحقق إخراج البناء (للتشخيص في حال فشل لاحقاً)
-RUN ls -la dist/ && ls -la dist/src/ || true
-
-# ---- مرحلة التشغيل ----
+# ---- مرحلة التشغيل (Runner) ----
 FROM node:20-alpine AS runner
 WORKDIR /app
+
+# تثبيت OpenSSL في مرحلة التشغيل أيضاً لضمان استقرار Prisma
+RUN apk add --no-cache openssl
 
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/package-lock.json* ./
@@ -35,5 +39,5 @@ EXPOSE 10000
 ENV NODE_ENV=production
 ENV PORT=10000
 
-# ⭐ التغيير الحاسم: dist/src/main.js وليس dist/main.js
+# التشغيل مع التأكد من إعداد قاعدة البيانات
 CMD ["sh", "-c", "npx prisma db push --accept-data-loss --skip-generate && node dist/src/main.js"]
