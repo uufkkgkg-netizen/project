@@ -33,10 +33,7 @@ services:
       - key: PORT
         value: 3000
       - key: NEXT_PUBLIC_API_URL
-        fromService:
-          type: web
-          name: femcare-backend-api
-          property: host
+        value: https://femcare-backend-api.onrender.com/api
 
 databases:
   - name: femcare-prod-db
