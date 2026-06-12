@@ -6,13 +6,20 @@ COPY package.json ./
 COPY package-lock.json* ./
 COPY prisma ./prisma/
 
-# تثبيت الحزم — install (وليس ci) لتجنب تعارض lock file
+# تثبيت الحزم
 RUN npm install --legacy-peer-deps
 
-# نسخ باقي المشروع والبناء
+# نسخ باقي المشروع
 COPY . .
+
+# توليد Prisma client
 RUN npx prisma generate
+
+# بناء التطبيق (NestJS يُخرج إلى dist/src/main.js)
 RUN npm run build
+
+# تحقق إخراج البناء (للتشخيص في حال فشل لاحقاً)
+RUN ls -la dist/ && ls -la dist/src/ || true
 
 # ---- مرحلة التشغيل ----
 FROM node:20-alpine AS runner
@@ -28,4 +35,5 @@ EXPOSE 10000
 ENV NODE_ENV=production
 ENV PORT=10000
 
-CMD ["sh", "-c", "npx prisma db push --accept-data-loss && node dist/main.js"]
+# ⭐ التغيير الحاسم: dist/src/main.js وليس dist/main.js
+CMD ["sh", "-c", "npx prisma db push --accept-data-loss --skip-generate && node dist/src/main.js"]
