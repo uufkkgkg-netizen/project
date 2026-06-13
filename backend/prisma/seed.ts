@@ -9,7 +9,7 @@
 import { PrismaClient, UserRole } from '@prisma/client';
 import { Pool } from 'pg';
 import { PrismaPg } from '@prisma/adapter-pg';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 
 // Load .env (needed when running seed script directly outside NestJS DI)
 import * as dotenv from 'dotenv';

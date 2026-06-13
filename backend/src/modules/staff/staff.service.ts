@@ -4,7 +4,7 @@ import {
 import { PrismaService } from '../../core/prisma/prisma.service';
 import { CreateStaffDto, UpdateStaffRoleDto, ASSIGNABLE_ROLES } from './dto/staff.dto';
 import { UserRole } from '@prisma/client';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class StaffService {
