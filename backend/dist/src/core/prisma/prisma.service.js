@@ -24,7 +24,7 @@ let PrismaService = class PrismaService extends client_1.PrismaClient {
         const connectionString = process.env.DATABASE_URL;
         const pool = new pg_1.Pool({ connectionString });
         const adapter = new adapter_pg_1.PrismaPg(pool);
-        super({ adapter });
+        super();
     }
     async onModuleInit() {
         await this.$connect();

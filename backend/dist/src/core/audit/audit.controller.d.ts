@@ -4,7 +4,6 @@ export declare class AuditController {
     constructor(auditService: AuditService);
     findAll(req: any, action?: string, entity?: string, tenantId?: string, from?: string, to?: string, page?: string, limit?: string): Promise<{
         data: {
-            path: string | null;
             id: string;
             createdAt: Date;
             tenantId: string | null;
@@ -15,6 +14,7 @@ export declare class AuditController {
             entityId: string | null;
             ipAddress: string | null;
             statusCode: number | null;
+            path: string | null;
             method: string | null;
         }[];
         total: number;
@@ -23,7 +23,6 @@ export declare class AuditController {
         totalPages: number;
     }>;
     findOne(id: string, req: any): Promise<{
-        path: string | null;
         id: string;
         createdAt: Date;
         tenantId: string | null;
@@ -37,6 +36,7 @@ export declare class AuditController {
         ipAddress: string | null;
         userAgent: string | null;
         statusCode: number | null;
+        path: string | null;
         method: string | null;
     } | null>;
 }

@@ -30,7 +30,6 @@ export declare class AuditService {
         limit?: number;
     }): Promise<{
         data: {
-            path: string | null;
             id: string;
             createdAt: Date;
             tenantId: string | null;
@@ -41,6 +40,7 @@ export declare class AuditService {
             entityId: string | null;
             ipAddress: string | null;
             statusCode: number | null;
+            path: string | null;
             method: string | null;
         }[];
         total: number;
@@ -49,7 +49,6 @@ export declare class AuditService {
         totalPages: number;
     }>;
     findOne(id: string): import("@prisma/client").Prisma.Prisma__AuditLogClient<{
-        path: string | null;
         id: string;
         createdAt: Date;
         tenantId: string | null;
@@ -63,6 +62,7 @@ export declare class AuditService {
         ipAddress: string | null;
         userAgent: string | null;
         statusCode: number | null;
+        path: string | null;
         method: string | null;
     } | null, null, import("@prisma/client/runtime/client").DefaultArgs, import("@prisma/client").Prisma.PrismaClientOptions>;
 }

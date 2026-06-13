@@ -20,14 +20,55 @@ let AppController = class AppController {
     getHello() {
         return this.appService.getHello();
     }
+    async seedDb() {
+        const { PrismaClient } = require('@prisma/client');
+        const bcrypt = require('bcrypt');
+        const prisma = new PrismaClient();
+        try {
+            const tenant = await prisma.tenant.upsert({
+                where: { subdomain: 'main' },
+                create: { name: 'FemCare Clinic Main', subdomain: 'main', isActive: true },
+                update: {},
+            });
+            const passwordHash = await bcrypt.hash('123456', 12);
+            await prisma.user.upsert({
+                where: { email: 'admin@gmail.com' },
+                create: { firstName: 'Super', lastName: 'Admin', email: 'admin@gmail.com', passwordHash, role: 'SUPER_ADMIN', tenantId: tenant.id, isActive: true },
+                update: { passwordHash, role: 'SUPER_ADMIN' },
+            });
+            await prisma.user.upsert({
+                where: { email: 'clinic@gmail.com' },
+                create: { firstName: 'Clinic', lastName: 'Admin', email: 'clinic@gmail.com', passwordHash, role: 'TENANT_ADMIN', tenantId: tenant.id, isActive: true },
+                update: { passwordHash, role: 'TENANT_ADMIN' },
+            });
+            await prisma.user.upsert({
+                where: { email: 'doctor@gmail.com' },
+                create: { firstName: 'Doctor', lastName: 'Ahmad', email: 'doctor@gmail.com', passwordHash, role: 'DOCTOR', tenantId: tenant.id, isActive: true },
+                update: { passwordHash, role: 'DOCTOR' },
+            });
+            return { success: true, message: 'Seeded successfully' };
+        }
+        catch (err) {
+            return { success: false, error: err.message };
+        }
+        finally {
+            await prisma.$disconnect();
+        }
+    }
 };
 exports.AppController = AppController;
 __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", String)
+    __metadata("design:returntype", void 0)
 ], AppController.prototype, "getHello", null);
+__decorate([
+    (0, common_1.Get)('seed'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], AppController.prototype, "seedDb", null);
 exports.AppController = AppController = __decorate([
     (0, common_1.Controller)(),
     __metadata("design:paramtypes", [app_service_1.AppService])

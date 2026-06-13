@@ -10,7 +10,11 @@ exports.AppService = void 0;
 const common_1 = require("@nestjs/common");
 let AppService = class AppService {
     getHello() {
-        return 'Hello World!';
+        return {
+            status: 'success',
+            message: 'Femcare Backend API is running successfully',
+            version: '1.0.0'
+        };
     }
 };
 exports.AppService = AppService;

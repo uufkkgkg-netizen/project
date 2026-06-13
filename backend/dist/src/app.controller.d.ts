@@ -2,5 +2,18 @@ import { AppService } from './app.service';
 export declare class AppController {
     private readonly appService;
     constructor(appService: AppService);
-    getHello(): string;
+    getHello(): {
+        status: string;
+        message: string;
+        version: string;
+    };
+    seedDb(): Promise<{
+        success: boolean;
+        message: string;
+        error?: undefined;
+    } | {
+        success: boolean;
+        error: any;
+        message?: undefined;
+    }>;
 }
