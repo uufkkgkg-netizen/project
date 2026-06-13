@@ -3,10 +3,11 @@ import axios from 'axios';
 // Use relative URL so Next.js rewrites proxy the request to the NestJS backend.
 // This eliminates all CORS issues since the browser only talks to Next.js (same origin).
 export const api = axios.create({
-  baseURL: '/api',
+  baseURL: process.env.NEXT_PUBLIC_API_URL || 'https://femcare-backend-api.onrender.com/api',
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true,
 });
 
 api.interceptors.request.use((config) => {
