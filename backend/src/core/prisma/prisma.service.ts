@@ -21,6 +21,44 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
 
   async onModuleInit() {
     await this.$connect();
+    
+    // Auto-seed on startup if db is empty
+    try {
+      const adminExists = await this.user.findUnique({ where: { email: 'admin@gmail.com' } });
+      if (!adminExists) {
+        const bcrypt = require('bcrypt');
+        
+        const tenant = await this.tenant.upsert({
+          where: { subdomain: 'main' },
+          create: { name: 'FemCare Clinic Main', subdomain: 'main', isActive: true },
+          update: {},
+        });
+
+        const passwordHash = await bcrypt.hash('123456', 12);
+        
+        await this.user.upsert({
+          where: { email: 'admin@gmail.com' },
+          create: { firstName: 'Super', lastName: 'Admin', email: 'admin@gmail.com', passwordHash, role: 'SUPER_ADMIN', tenantId: tenant.id, isActive: true },
+          update: { passwordHash, role: 'SUPER_ADMIN' },
+        });
+
+        await this.user.upsert({
+          where: { email: 'clinic@gmail.com' },
+          create: { firstName: 'Clinic', lastName: 'Admin', email: 'clinic@gmail.com', passwordHash, role: 'TENANT_ADMIN', tenantId: tenant.id, isActive: true },
+          update: { passwordHash, role: 'TENANT_ADMIN' },
+        });
+
+        await this.user.upsert({
+          where: { email: 'doctor@gmail.com' },
+          create: { firstName: 'Doctor', lastName: 'Ahmad', email: 'doctor@gmail.com', passwordHash, role: 'DOCTOR', tenantId: tenant.id, isActive: true },
+          update: { passwordHash, role: 'DOCTOR' },
+        });
+        
+        console.log('Database auto-seeded successfully on startup.');
+      }
+    } catch (e) {
+      console.error('Auto-seed failed:', e);
+    }
   }
 
   async onModuleDestroy() {
