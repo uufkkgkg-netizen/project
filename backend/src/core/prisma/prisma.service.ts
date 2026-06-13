@@ -26,7 +26,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
     try {
       const adminExists = await this.user.findUnique({ where: { email: 'admin@gmail.com' } });
       if (!adminExists) {
-        const bcrypt = require('bcrypt');
+        const bcrypt = require('bcryptjs');
         
         const tenant = await this.tenant.upsert({
           where: { subdomain: 'main' },

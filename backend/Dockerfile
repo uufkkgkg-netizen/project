@@ -2,8 +2,8 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 
-# تثبيت OpenSSL الضروري لعمل Prisma
-RUN apk add --no-cache openssl
+# تثبيت الأدوات الضرورية لـ Prisma و bcrypt
+RUN apk add --no-cache openssl python3 make g++
 
 # نسخ ملفات الحزم
 COPY package.json ./
