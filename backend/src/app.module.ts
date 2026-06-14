@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { ScheduleModule } from '@nestjs/schedule';
 import { PrismaModule } from './core/prisma/prisma.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { AppController } from './app.controller';
@@ -18,9 +19,28 @@ import { MedicalTemplatesModule } from './modules/medical-templates/medical-temp
 import { TenantInterceptor } from './core/prisma/tenant.interceptor';
 import { UltrasoundReportsModule } from './modules/ultrasound-reports/ultrasound-reports.module';
 import { SettingsModule } from './modules/settings/settings.module';
+import { WhatsappModule } from './whatsapp/whatsapp.module';
 
 @Module({
-  imports: [PrismaModule, AuditModule, AuthModule, PatientsModule, AppointmentsModule, MedicalRecordsModule, AnalyticsModule, PrescriptionsModule, BillingModule, SonarModule, AdminModule, StaffModule, MedicalTemplatesModule, UltrasoundReportsModule, SettingsModule],
+  imports: [
+    ScheduleModule.forRoot(),
+    PrismaModule, 
+    AuditModule, 
+    AuthModule, 
+    PatientsModule, 
+    AppointmentsModule, 
+    MedicalRecordsModule, 
+    AnalyticsModule, 
+    PrescriptionsModule, 
+    BillingModule, 
+    SonarModule, 
+    AdminModule, 
+    StaffModule, 
+    MedicalTemplatesModule, 
+    UltrasoundReportsModule, 
+    SettingsModule, 
+    WhatsappModule
+  ],
   controllers: [AppController],
   providers: [
     AppService,

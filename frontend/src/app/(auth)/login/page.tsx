@@ -51,9 +51,14 @@ export default function LoginPage() {
     try {
       const response = await api.post("/auth/login", data);
       
-      // Store the token in localStorage
-      if (response.data && response.data.access_token) {
+      // Store the token in localStorage and as a cookie for middleware
+      if (response.data?.access_token) {
         localStorage.setItem("access_token", response.data.access_token);
+        // Also set as cookie to be accessible by middleware
+        document.cookie = `access_token=${response.data.access_token}; path=/; max-age=86400; SameSite=Strict`;
+      } else {
+        throw new Error("لم يتم العثور على التوكن في الاستجابة");
+      }
         
         toast.success("تم تسجيل الدخول بنجاح", {
           description: "جاري تحويلك إلى لوحة التحكم...",
@@ -61,9 +66,6 @@ export default function LoginPage() {
         
         // Redirect to dashboard
         router.push("/dashboard");
-      } else {
-        throw new Error("لم يتم العثور على التوكن في الاستجابة");
-      }
     } catch (error: any) {
       toast.error("فشل تسجيل الدخول", {
         description: error.response?.data?.message || "البريد الإلكتروني أو كلمة المرور غير صحيحة.",

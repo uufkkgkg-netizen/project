@@ -37,6 +37,7 @@ model Tenant {
   medicalTemplates    MedicalTemplate[]
   visits              Visit[]
   payments            Payment[]
+  whatsappLogs        WhatsappLog[]
 
   @@map("tenants")
 }
@@ -404,4 +405,31 @@ model MedicalTemplate {
   @@index([tenantId])
   @@index([category])
   @@map("medical_templates")
+}
+
+enum WhatsappStatus {
+  PENDING
+  SUCCESS
+  FAILED
+
+  @@map("whatsapp_status")
+}
+
+model WhatsappLog {
+  id              String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId        String         @map("tenant_id") @db.Uuid
+  patientName     String         @map("patient_name") @db.VarChar(255)
+  patientPhone    String         @map("patient_phone") @db.VarChar(20)
+  appointmentDate DateTime       @map("appointment_date") @db.Timestamptz
+  status          WhatsappStatus @default(PENDING)
+  errorMessage    String?        @map("error_message") @db.Text
+  createdAt       DateTime       @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt       DateTime       @updatedAt @map("updated_at") @db.Timestamptz
+
+  tenant          Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([appointmentDate])
+  @@index([status])
+  @@map("whatsapp_logs")
 }

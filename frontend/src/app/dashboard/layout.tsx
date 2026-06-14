@@ -21,6 +21,8 @@ import {
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
+import { jwtDecode } from "jwt-decode";
+
 export default function DashboardLayout({
   children,
 }: {
@@ -30,30 +32,44 @@ export default function DashboardLayout({
   const pathname = usePathname();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [userRole, setUserRole] = useState<string | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem("access_token");
     if (!token) {
       router.push("/login");
     } else {
-      setIsAuthenticated(true);
+      try {
+        const decoded: any = jwtDecode(token);
+        setUserRole(decoded.role || "SUPER_ADMIN"); // default bypass if decoding fails but token exists
+        setIsAuthenticated(true);
+      } catch (e) {
+        localStorage.removeItem("access_token");
+        document.cookie = "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        router.push("/login");
+      }
     }
   }, [router]);
 
   const handleLogout = () => {
     localStorage.removeItem("access_token");
+    document.cookie = "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     router.push("/login");
   };
 
-  const navItems = [
-    { name: "الرئيسية",            href: "/dashboard",              icon: Home },
-    { name: "المرضى",              href: "/dashboard/patients",     icon: Users },
-    { name: "المواعيد",            href: "/dashboard/appointments", icon: CalendarIcon },
-    { name: "السجلات الطبية",      href: "/dashboard/records",      icon: Stethoscope },
-    { name: "الفواتير والمدفوعات", href: "/dashboard/billing",      icon: Receipt },
-    { name: "التقارير والإحصاء",  href: "/dashboard/analytics",    icon: Activity },
-    { name: "الإعدادات",          href: "/dashboard/settings",     icon: Settings },
+  const allNavItems = [
+    { name: "الرئيسية",            href: "/dashboard",              icon: Home,           roles: ["SUPER_ADMIN", "RECEPTIONIST", "ACCOUNTANT", "DOCTOR", "NURSE", "TENANT_ADMIN"] },
+    { name: "المرضى",              href: "/dashboard/patients",     icon: Users,          roles: ["SUPER_ADMIN", "DOCTOR", "NURSE", "TENANT_ADMIN"] },
+    { name: "المواعيد",            href: "/dashboard/appointments", icon: CalendarIcon,   roles: ["SUPER_ADMIN", "RECEPTIONIST", "DOCTOR", "NURSE", "TENANT_ADMIN"] },
+    { name: "السجلات الطبية",      href: "/dashboard/records",      icon: Stethoscope,    roles: ["SUPER_ADMIN", "DOCTOR", "TENANT_ADMIN"] },
+    { name: "الفواتير والمدفوعات", href: "/dashboard/billing",      icon: Receipt,        roles: ["SUPER_ADMIN", "ACCOUNTANT", "TENANT_ADMIN"] },
+    { name: "التقارير والإحصاء",  href: "/dashboard/analytics",    icon: Activity,       roles: ["SUPER_ADMIN", "TENANT_ADMIN"] },
+    { name: "الموظفون والصلاحيات",href: "/dashboard/settings/staff",icon: Users,          roles: ["SUPER_ADMIN", "TENANT_ADMIN"] },
+    { name: "إشعارات الواتساب",    href: "/dashboard/whatsapp-logs",icon: Bell,           roles: ["SUPER_ADMIN"] },
+    { name: "الإعدادات",          href: "/dashboard/settings",     icon: Settings,       roles: ["SUPER_ADMIN", "TENANT_ADMIN"] },
   ];
+
+  const navItems = allNavItems.filter(item => userRole && item.roles.includes(userRole));
 
   if (isAuthenticated === null) {
     return (
