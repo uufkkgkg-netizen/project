@@ -43,8 +43,31 @@ export default function DashboardOverviewPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-[calc(100vh-100px)]">
-        <Loader2 className="h-10 w-10 animate-spin text-fuchsia-500" />
+      <div className="flex flex-col gap-6 pb-10">
+        {/* KPI Skeletons */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="card-medical p-5 space-y-3">
+              <div className="h-4 w-24 bg-slate-100 rounded-lg animate-pulse" />
+              <div className="h-8 w-16 bg-slate-100 rounded-lg animate-pulse" />
+            </div>
+          ))}
+        </div>
+        {/* Content Skeletons */}
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+          <div className="xl:col-span-2 card-medical p-6 space-y-3">
+            <div className="h-5 w-32 bg-slate-100 rounded-lg animate-pulse" />
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="h-10 rounded-xl bg-slate-100 animate-pulse" />
+            ))}
+          </div>
+          <div className="card-medical p-6 space-y-3">
+            <div className="h-5 w-24 bg-slate-100 rounded-lg animate-pulse" />
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="h-16 rounded-xl bg-slate-100 animate-pulse" />
+            ))}
+          </div>
+        </div>
       </div>
     );
   }

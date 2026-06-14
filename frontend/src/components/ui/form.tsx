@@ -142,6 +142,8 @@ const FormDescription = React.forwardRef<
 })
 FormDescription.displayName = "FormDescription"
 
+import { AlertCircle } from "lucide-react"
+
 const FormMessage = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
@@ -157,9 +159,10 @@ const FormMessage = React.forwardRef<
     <p
       ref={ref}
       id={formMessageId}
-      className={cn("text-sm font-medium text-red-500 dark:text-red-900", className)}
+      className={cn("mt-1 text-xs text-red-600 flex items-center gap-1", className)}
       {...props}
     >
+      {error && <AlertCircle className="w-3.5 h-3.5" />}
       {body}
     </p>
   )

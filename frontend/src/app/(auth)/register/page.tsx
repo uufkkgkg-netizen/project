@@ -67,7 +67,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <Card className="border-0 shadow-none bg-transparent sm:bg-white sm:shadow-xl sm:border-slate-200">
+    <Card className="card-medical border-0 shadow-none bg-transparent sm:bg-white sm:shadow-xl sm:border-slate-200">
       <CardHeader className="space-y-2 pb-6">
         <CardTitle className="text-2xl font-bold text-slate-900">تسجيل عيادة جديدة</CardTitle>
         <CardDescription className="text-base">
@@ -176,7 +176,7 @@ export default function RegisterPage() {
               )}
             />
 
-            <Button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white h-11" disabled={isLoading}>
+            <Button type="submit" className="w-full h-11 text-base shadow-brand" disabled={isLoading}>
               {isLoading ? (
                 <>
                   <Loader2 className="ml-2 h-4 w-4 animate-spin" />
@@ -191,7 +191,7 @@ export default function RegisterPage() {
         
         <div className="mt-6 text-center text-sm text-slate-600">
           لديك حساب بالفعل؟{" "}
-          <Link href="/login" className="font-semibold text-indigo-600 hover:text-indigo-500">
+          <Link href="/login" className="font-semibold text-brand-600 hover:text-brand-700 transition-colors">
             سجل الدخول من هنا
           </Link>
         </div>

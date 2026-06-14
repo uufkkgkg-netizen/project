@@ -143,7 +143,7 @@ export default function PatientsPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
         <div className="flex items-center gap-4">
-          <div className="p-3 bg-purple-100 text-purple-600 rounded-2xl">
+          <div className="p-3 rounded-2xl" style={{background:"linear-gradient(135deg,#FFF1F2,#FFE4E6)",color:"#E11D48"}}>
             <UserPlus className="h-6 w-6" />
           </div>
           <div>
@@ -153,7 +153,7 @@ export default function PatientsPage() {
         </div>
         
         <Button
-          className="bg-purple-600 hover:bg-purple-700 text-white rounded-xl shadow-md h-11 px-6"
+          className="h-11 px-6"
           onClick={() => setIsDialogOpen(true)}
         >
           <Plus className="ml-2 h-4 w-4" /> إضافة مريضة جديدة
@@ -254,7 +254,7 @@ export default function PatientsPage() {
                 />
 
                 <div className="flex justify-end pt-4 border-t border-slate-100">
-                  <Button type="submit" className="w-full sm:w-auto bg-purple-600 hover:bg-purple-700 text-white rounded-xl px-8" disabled={isSubmitting}>
+                  <Button type="submit" className="w-full sm:w-auto rounded-xl px-8" disabled={isSubmitting}>
                     {isSubmitting ? <Loader2 className="ml-2 h-4 w-4 animate-spin" /> : null}
                     {isSubmitting ? "جاري الحفظ..." : "حفظ بيانات المريضة"}
                   </Button>
@@ -299,10 +299,11 @@ export default function PatientsPage() {
               <tbody className="divide-y divide-slate-50 bg-white">
                 {isLoading ? (
                   <tr>
-                    <td colSpan={6} className="px-6 py-12 text-center text-slate-500">
-                      <div className="flex flex-col justify-center items-center gap-3">
-                        <Loader2 className="h-8 w-8 animate-spin text-purple-600" />
-                        <span>جاري تحميل البيانات...</span>
+                    <td colSpan={6} className="px-6 py-10">
+                      <div className="space-y-3">
+                        {[...Array(5)].map((_, i) => (
+                          <div key={i} className="h-10 rounded-xl bg-slate-100 animate-pulse" />
+                        ))}
                       </div>
                     </td>
                   </tr>
@@ -319,9 +320,9 @@ export default function PatientsPage() {
                   </tr>
                 ) : (
                   filteredPatients.map((patient) => (
-                    <tr key={patient.id} className="hover:bg-purple-50/50 transition-colors group">
+                    <tr key={patient.id} className="hover:bg-rose-50/40 transition-colors group">
                       <td className="px-6 py-4">
-                        <span className="font-mono font-bold text-purple-700 bg-purple-100 px-2.5 py-1 rounded-md">
+                        <span className="font-mono font-bold px-2.5 py-1 rounded-md" style={{background:"#FFF1F2",color:"#E11D48"}}>
                           #{patient.fileNumber}
                         </span>
                       </td>
@@ -341,7 +342,7 @@ export default function PatientsPage() {
                         <Button 
                           variant="outline" 
                           size="sm" 
-                          className="rounded-xl text-purple-600 border-purple-200 bg-white hover:bg-purple-600 hover:text-white transition-all shadow-sm"
+                          className="rounded-xl border-rose-200 text-rose-600 bg-white hover:bg-rose-600 hover:text-white transition-all shadow-sm"
                           onClick={() => router.push(`/dashboard/patients/${patient.id}`)}
                         >
                           الملف الطبي

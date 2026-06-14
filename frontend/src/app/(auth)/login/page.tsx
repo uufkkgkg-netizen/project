@@ -74,7 +74,7 @@ export default function LoginPage() {
   }
 
   return (
-    <Card className="border-0 shadow-none bg-transparent sm:bg-white sm:shadow-xl sm:border-slate-200">
+    <Card className="card-medical border-0 shadow-none bg-transparent sm:bg-white sm:shadow-xl sm:border-slate-200">
       <CardHeader className="space-y-2 pb-6">
         <CardTitle className="text-2xl font-bold text-slate-900">تسجيل الدخول</CardTitle>
         <CardDescription className="text-base">
@@ -116,7 +116,7 @@ export default function LoginPage() {
                 <FormItem>
                   <div className="flex items-center justify-between">
                     <FormLabel>كلمة المرور</FormLabel>
-                    <Link href="#" className="text-sm font-medium text-indigo-600 hover:text-indigo-500">
+                    <Link href="#" className="text-sm font-medium text-brand-600 hover:text-brand-700 transition-colors">
                       نسيت كلمة المرور؟
                     </Link>
                   </div>
@@ -138,7 +138,7 @@ export default function LoginPage() {
               )}
             />
 
-            <Button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white h-11" disabled={isLoading}>
+            <Button type="submit" className="w-full h-11 text-base shadow-brand" disabled={isLoading}>
               {isLoading ? (
                 <>
                   <Loader2 className="ml-2 h-4 w-4 animate-spin" />
@@ -153,7 +153,7 @@ export default function LoginPage() {
         
         <div className="mt-6 text-center text-sm text-slate-600">
           ليس لديك حساب عيادة؟{" "}
-          <Link href="/register" className="font-semibold text-indigo-600 hover:text-indigo-500">
+          <Link href="/register" className="font-semibold text-brand-600 hover:text-brand-700 transition-colors">
             سجل عيادتك الآن
           </Link>
         </div>

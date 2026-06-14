@@ -3,22 +3,21 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { 
-  Activity, 
-  Home, 
-  Users, 
-  Calendar as CalendarIcon, 
-  Settings, 
-  LogOut, 
+import {
+  Activity,
+  Home,
+  Users,
+  Calendar as CalendarIcon,
+  Settings,
+  LogOut,
   Menu,
   X,
   Bell,
   Search,
-  MessageSquare,
   FileText,
   Stethoscope,
-  Activity as HeartbeatIcon,
   Receipt,
+  Plus,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
@@ -47,162 +46,163 @@ export default function DashboardLayout({
   };
 
   const navItems = [
-    { name: "الرئيسية",             href: "/dashboard",                          icon: Home },
-    { name: "المراجعات (المرضى)",   href: "/dashboard/patients",                 icon: Users },
-    { name: "المواعيد",             href: "/dashboard/appointments",             icon: CalendarIcon },
-    { name: "السونار والتحاليل",   href: "/dashboard/ultrasound",               icon: Activity },
-    { name: "القوالب الطبية",       href: "/dashboard/clinical/templates",       icon: FileText },
-    { name: "الوصفات الطبية",      href: "/dashboard/prescriptions",            icon: FileText },
-    { name: "الفواتير والمدفوعات", href: "/dashboard/billing",                  icon: Receipt },
-    { name: "الموظفون والصلاحيات", href: "/dashboard/settings/staff",          icon: Users },
-    { name: "سجل التدقيق",         href: "/dashboard/settings/audit",          icon: FileText },
-    { name: "إعدادات العيادة",     href: "/dashboard/settings",                 icon: Settings },
+    { name: "الرئيسية",            href: "/dashboard",              icon: Home },
+    { name: "المرضى",              href: "/dashboard/patients",     icon: Users },
+    { name: "المواعيد",            href: "/dashboard/appointments", icon: CalendarIcon },
+    { name: "السجلات الطبية",      href: "/dashboard/records",      icon: Stethoscope },
+    { name: "الفواتير والمدفوعات", href: "/dashboard/billing",      icon: Receipt },
+    { name: "التقارير والإحصاء",  href: "/dashboard/analytics",    icon: Activity },
+    { name: "الإعدادات",          href: "/dashboard/settings",     icon: Settings },
   ];
 
   if (isAuthenticated === null) {
-    return <div className="flex min-h-screen items-center justify-center bg-slate-50">جاري التحقق...</div>;
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#F8FAFC]" dir="rtl">
+        <div className="flex flex-col items-center gap-6">
+          {/* Logo skeleton */}
+          <div className="flex items-center gap-2">
+            <div className="h-8 w-32 rounded-xl bg-slate-100 animate-pulse" />
+          </div>
+          {/* Skeleton cards */}
+          <div className="space-y-3 w-64">
+            <div className="h-10 rounded-xl bg-slate-100 animate-pulse" />
+            <div className="h-10 rounded-xl bg-slate-100 animate-pulse" />
+            <div className="h-10 rounded-xl bg-slate-100 animate-pulse" />
+          </div>
+          <p className="text-sm text-slate-400">جاري التحقق من الجلسة...</p>
+        </div>
+      </div>
+    );
   }
 
-  return (
-    <div className="min-h-screen bg-[#F8F9FE] flex text-slate-800 font-sans" dir="rtl">
-      
-      {/* --- SIDEBAR (Desktop) --- */}
-      <aside className="hidden md:flex flex-col w-64 bg-white border-l border-slate-100 fixed inset-y-0 right-0 z-50 shadow-[0_0_20px_rgba(0,0,0,0.03)]">
-        {/* Logo Area */}
-        <div className="h-20 flex items-center justify-center border-b border-slate-50">
-          <div className="flex items-center gap-2 text-purple-700">
-            <span className="font-bold text-2xl tracking-tight">FemCare</span>
-            <HeartbeatIcon className="h-6 w-6 text-pink-500" />
-          </div>
-        </div>
-        
-        {/* Navigation */}
-        <div className="flex-1 overflow-y-auto py-6 px-4">
-          <nav className="space-y-1">
-            {navItems.map((item) => {
-              const isActive = pathname === item.href;
-              return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={`flex items-center px-4 py-3 rounded-2xl transition-all duration-200 ${
-                    isActive 
-                      ? "bg-purple-700 text-white shadow-md shadow-purple-200" 
-                      : "text-slate-500 hover:bg-purple-50 hover:text-purple-700"
-                  }`}
-                >
-                  <item.icon className={`h-5 w-5 ml-3 ${isActive ? 'text-white' : 'text-slate-400'}`} />
-                  <span className={`font-medium ${isActive ? 'font-bold' : ''}`}>{item.name}</span>
-                </Link>
-              );
-            })}
-          </nav>
-        </div>
-
-        {/* Logout */}
-        <div className="p-4 border-t border-slate-50">
-          <button 
-            onClick={handleLogout}
-            className="flex items-center w-full px-4 py-3 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-2xl transition-colors"
+  const SidebarContent = () => (
+    <>
+      {/* Logo Area */}
+      <div className="h-20 flex items-center justify-center border-b border-slate-50">
+        <div className="flex items-center gap-2">
+          <span
+            className="font-extrabold text-2xl tracking-tight"
+            style={{ background: "linear-gradient(135deg, #E11D48, #9333EA)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}
           >
-            <LogOut className="h-5 w-5 ml-3 text-slate-400 group-hover:text-red-500" />
-            <span className="font-medium">تسجيل الخروج</span>
-          </button>
+            FemCare
+          </span>
+          <span className="text-xl">🌸</span>
         </div>
+      </div>
+
+      {/* Quick CTA */}
+      <div className="px-4 py-4">
+        <Link
+          href="/dashboard/appointments?new=1"
+          className="btn-primary flex items-center justify-center gap-2 w-full py-2.5 text-sm"
+        >
+          <Plus className="h-4 w-4" />
+          <span>+ حجز موعد جديد</span>
+        </Link>
+      </div>
+
+      {/* Navigation */}
+      <div className="flex-1 overflow-y-auto py-2 px-3">
+        <nav className="space-y-1">
+          {navItems.map((item) => {
+            const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href));
+            return (
+              <Link
+                key={item.name}
+                href={item.href}
+                onClick={() => setIsSidebarOpen(false)}
+                className={`flex items-center px-4 py-3 rounded-2xl transition-all duration-200 ${
+                  isActive
+                    ? "text-white shadow-md"
+                    : "text-slate-500 hover:bg-rose-50 hover:text-rose-700"
+                }`}
+                style={isActive ? { background: "linear-gradient(135deg, #E11D48, #9333EA)", boxShadow: "0 4px 14px rgba(190, 24, 93, 0.25)" } : {}}
+              >
+                <item.icon className={`h-5 w-5 ml-3 ${isActive ? "text-white" : "text-slate-400"}`} />
+                <span className={`text-sm font-medium ${isActive ? "font-bold" : ""}`}>{item.name}</span>
+              </Link>
+            );
+          })}
+        </nav>
+      </div>
+
+      {/* Logout */}
+      <div className="p-4 border-t border-slate-50">
+        <button
+          onClick={handleLogout}
+          className="flex items-center w-full px-4 py-3 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-2xl transition-colors"
+        >
+          <LogOut className="h-5 w-5 ml-3 text-slate-400" />
+          <span className="text-sm font-medium">تسجيل الخروج</span>
+        </button>
+      </div>
+    </>
+  );
+
+  return (
+    <div className="min-h-screen bg-[#F8FAFC] flex text-slate-800 font-sans" dir="rtl">
+
+      {/* --- SIDEBAR (Desktop) --- */}
+      <aside className="hidden md:flex flex-col w-64 bg-white border-l border-slate-100 fixed inset-y-0 right-0 z-50 shadow-[0_0_30px_rgba(15,23,42,0.05)]">
+        <SidebarContent />
       </aside>
 
       {/* --- MOBILE SIDEBAR OVERLAY --- */}
       {isSidebarOpen && (
-        <div className="md:hidden fixed inset-0 z-50 flex bg-slate-900/40 backdrop-blur-sm">
-          <aside className="w-64 bg-white text-slate-800 h-full flex flex-col absolute right-0 shadow-2xl">
-            <div className="h-20 flex items-center justify-between px-4 border-b border-slate-100">
-              <div className="flex items-center gap-2 text-purple-700">
-                <span className="font-bold text-xl">FemCare</span>
-                <HeartbeatIcon className="h-5 w-5 text-pink-500" />
-              </div>
-              <button onClick={() => setIsSidebarOpen(false)} className="p-2 text-slate-400 hover:text-purple-600 bg-slate-50 rounded-full">
+        <div className="md:hidden fixed inset-0 z-50 flex bg-slate-900/40 backdrop-blur-sm" onClick={() => setIsSidebarOpen(false)}>
+          <aside
+            className="w-64 bg-white text-slate-800 h-full flex flex-col absolute right-0 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close button */}
+            <div className="absolute top-4 left-4">
+              <button onClick={() => setIsSidebarOpen(false)} className="p-2 text-slate-400 hover:text-rose-600 bg-slate-50 rounded-full transition-colors">
                 <X className="h-5 w-5" />
               </button>
             </div>
-            
-            <div className="flex-1 overflow-y-auto py-6 px-4">
-              <nav className="space-y-1">
-                {navItems.map((item) => {
-                  const isActive = pathname === item.href;
-                  return (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      onClick={() => setIsSidebarOpen(false)}
-                      className={`flex items-center px-4 py-3 rounded-2xl transition-all ${
-                        isActive ? "bg-purple-700 text-white shadow-md" : "text-slate-500 hover:bg-purple-50 hover:text-purple-700"
-                      }`}
-                    >
-                      <item.icon className="h-5 w-5 ml-3" />
-                      <span className="font-medium">{item.name}</span>
-                    </Link>
-                  );
-                })}
-              </nav>
-            </div>
-            
-            <div className="p-4 border-t border-slate-100">
-              <button 
-                onClick={handleLogout}
-                className="flex items-center w-full px-4 py-3 text-slate-500 hover:bg-red-50 hover:text-red-600 rounded-2xl"
-              >
-                <LogOut className="h-5 w-5 ml-3" />
-                <span className="font-medium">تسجيل الخروج</span>
-              </button>
-            </div>
+            <SidebarContent />
           </aside>
-          <div className="flex-1" onClick={() => setIsSidebarOpen(false)}></div>
         </div>
       )}
 
       {/* --- MAIN CONTENT AREA --- */}
       <main className="flex-1 flex flex-col md:mr-64 min-w-0 transition-all">
-        
+
         {/* --- HEADER --- */}
-        <header className="h-24 bg-white/60 backdrop-blur-md flex items-center justify-between px-4 sm:px-8 sticky top-0 z-30">
-          
+        <header className="h-20 bg-white/80 backdrop-blur-md flex items-center justify-between px-4 sm:px-8 sticky top-0 z-30 border-b border-slate-100">
+
           {/* Mobile Menu Toggle */}
           <div className="flex items-center md:hidden">
-            <button 
+            <button
               onClick={() => setIsSidebarOpen(true)}
-              className="p-2 bg-white rounded-full shadow-sm text-slate-600 hover:text-purple-600"
+              className="p-2 bg-white rounded-full shadow-sm text-slate-600 hover:text-rose-600 transition-colors border border-slate-100"
             >
               <Menu className="h-5 w-5" />
             </button>
           </div>
 
-          {/* Center Title (Welcome Message) */}
-          <div className="hidden md:flex flex-col items-center justify-center flex-1">
-            <h2 className="text-2xl font-bold text-slate-800">مرحباً د. سارة أحمد 🌸</h2>
-            <p className="text-sm text-slate-500">مرحباً بك في نظام إدارة عيادة النسائية والتوليد</p>
+          {/* Center Title */}
+          <div className="hidden md:flex flex-col justify-center flex-1">
+            <h2 className="text-xl font-extrabold text-slate-800">مرحباً 🌸</h2>
+            <p className="text-xs text-slate-400">نظام إدارة عيادة النسائية والتوليد</p>
           </div>
 
-          {/* Left Actions (Search, Notifications, Profile) */}
-          <div className="flex items-center gap-3 md:gap-5 justify-end flex-1 md:flex-none">
-            
+          {/* Left Actions */}
+          <div className="flex items-center gap-3 justify-end">
+
             {/* Search Bar */}
-            <div className="hidden lg:flex relative w-64">
+            <div className="hidden lg:flex relative w-56">
               <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                 <Search className="h-4 w-4 text-slate-400" />
               </div>
-              <Input 
-                placeholder="البحث عن مريضة..." 
-                className="pr-10 bg-white border-slate-200 rounded-full h-10 focus-visible:ring-purple-500"
+              <Input
+                placeholder="البحث عن مريضة..."
+                className="pr-10 bg-slate-50 !border-slate-200 !rounded-full h-10 !shadow-none"
               />
             </div>
 
-            {/* Messages */}
-            <button className="p-2.5 bg-white border border-slate-100 text-slate-400 hover:text-purple-600 hover:bg-purple-50 rounded-full transition-colors relative shadow-sm">
-              <MessageSquare className="h-5 w-5" />
-            </button>
-
             {/* Notifications */}
-            <button className="p-2.5 bg-white border border-slate-100 text-slate-400 hover:text-purple-600 hover:bg-purple-50 rounded-full transition-colors relative shadow-sm">
+            <button className="p-2.5 bg-white border border-slate-100 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-full transition-colors relative shadow-sm">
               <Bell className="h-5 w-5" />
               <span className="absolute top-0 right-0 w-4 h-4 bg-red-500 text-white text-[10px] font-bold flex items-center justify-center rounded-full border-2 border-white">
                 3
@@ -210,12 +210,15 @@ export default function DashboardLayout({
             </button>
 
             {/* User Avatar */}
-            <div className="h-10 w-10 rounded-full bg-gradient-to-tr from-purple-500 to-pink-400 flex items-center justify-center text-white font-bold shadow-md ring-2 ring-white cursor-pointer hover:scale-105 transition-transform">
-              د.س
+            <div
+              className="h-10 w-10 rounded-full flex items-center justify-center text-white font-bold shadow-md ring-2 ring-white cursor-pointer hover:scale-105 transition-transform text-sm"
+              style={{ background: "linear-gradient(135deg, #E11D48, #9333EA)" }}
+            >
+              م
             </div>
           </div>
         </header>
-        
+
         {/* --- PAGE CONTENT --- */}
         <div className="flex-1 p-4 sm:p-6 lg:p-8">
           {children}
