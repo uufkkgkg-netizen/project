@@ -5,8 +5,23 @@ import type { Response, Request } from 'express';
 export declare class AuthController {
     private readonly authService;
     constructor(authService: AuthService);
-    login(loginDto: LoginDto, res: Response): Promise<{
+    login(loginDto: LoginDto, req: Request, res: Response): Promise<{
         access_token: string;
+        csrf_token: string;
+        user: {
+            id: any;
+            firstName: any;
+            lastName: any;
+            email: any;
+            tenantId: any;
+            avatarUrl: any;
+            role: any;
+            isSuperAdmin: boolean;
+        };
+    }>;
+    refresh(req: Request, res: Response): Promise<{
+        access_token: string;
+        csrf_token: string;
         user: {
             id: any;
             firstName: any;
@@ -31,7 +46,7 @@ export declare class AuthController {
         role: any;
         isSuperAdmin: boolean;
     }>;
-    logout(res: Response): Promise<{
+    logout(req: Request, res: Response): Promise<{
         message: string;
     }>;
     register(registerDto: RegisterDto): Promise<{

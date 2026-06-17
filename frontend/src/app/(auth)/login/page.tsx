@@ -39,7 +39,7 @@ export default function LoginPage() {
       // Also store token in memory for cross-origin Bearer auth fallback.
       const result = await api.post("/auth/login", data);
       if (result.data?.access_token) {
-        tokenStore.set(result.data.access_token);
+        tokenStore.set(result.data.access_token, result.data.csrf_token);
       }
 
       toast.success("تم تسجيل الدخول بنجاح 🌸", {

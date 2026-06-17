@@ -48,6 +48,7 @@ const jwt_1 = require("@nestjs/jwt");
 const prisma_service_1 = require("../../core/prisma/prisma.service");
 const client_1 = require("@prisma/client");
 const bcrypt = __importStar(require("bcryptjs"));
+const crypto = __importStar(require("crypto"));
 let AuthService = class AuthService {
     prisma;
     jwtService;
@@ -55,7 +56,7 @@ let AuthService = class AuthService {
         this.prisma = prisma;
         this.jwtService = jwtService;
     }
-    async login(email, pass) {
+    async login(email, pass, ipAddress, deviceInfo) {
         const user = await this.prisma.user.findUnique({ where: { email } });
         if (!user || !user.isActive) {
             throw new common_1.UnauthorizedException('Invalid credentials');
@@ -77,10 +78,68 @@ let AuthService = class AuthService {
             isSuperAdmin,
         };
         const access_token = await this.jwtService.signAsync(payload);
+        const csrfToken = crypto.randomBytes(32).toString('hex');
+        const refreshToken = crypto.randomBytes(64).toString('hex');
+        const expiresAt = new Date();
+        expiresAt.setDate(expiresAt.getDate() + 7);
+        await this.prisma.session.create({
+            data: {
+                userId: user.id,
+                refreshToken,
+                ipAddress: ipAddress || null,
+                deviceInfo: deviceInfo || null,
+                expiresAt,
+            },
+        });
         return {
             access_token,
+            csrfToken,
+            refreshToken,
             user: this.sanitizeUser(user),
         };
+    }
+    async refreshToken(refreshTokenString, ipAddress) {
+        const session = await this.prisma.session.findUnique({
+            where: { refreshToken: refreshTokenString },
+            include: { user: true },
+        });
+        if (!session || session.isRevoked || session.expiresAt < new Date()) {
+            throw new common_1.UnauthorizedException('Invalid or expired refresh token');
+        }
+        const user = session.user;
+        if (!user.isActive) {
+            throw new common_1.UnauthorizedException('User is inactive');
+        }
+        const payload = {
+            sub: user.id,
+            email: user.email,
+            tenantId: user.tenantId,
+            role: user.role,
+            isSuperAdmin: user.role === client_1.UserRole.SUPER_ADMIN,
+        };
+        const access_token = await this.jwtService.signAsync(payload);
+        const csrfToken = crypto.randomBytes(32).toString('hex');
+        const newRefreshToken = crypto.randomBytes(64).toString('hex');
+        const expiresAt = new Date();
+        expiresAt.setDate(expiresAt.getDate() + 7);
+        await this.prisma.session.update({
+            where: { id: session.id },
+            data: {
+                refreshToken: newRefreshToken,
+                expiresAt,
+                ipAddress: ipAddress || session.ipAddress,
+            },
+        });
+        return { access_token, csrfToken, refreshToken: newRefreshToken, user: this.sanitizeUser(user) };
+    }
+    async logout(refreshTokenString) {
+        if (refreshTokenString) {
+            await this.prisma.session.updateMany({
+                where: { refreshToken: refreshTokenString },
+                data: { isRevoked: true },
+            });
+        }
+        return { message: 'Logged out successfully' };
     }
     async getMe(userId) {
         const user = await this.prisma.user.findUnique({
@@ -94,6 +153,7 @@ let AuthService = class AuthService {
                         defaultCurrency: true,
                         subscriptionStatus: true,
                         subscriptionPlan: true,
+                        settings: true,
                     },
                 },
             },
@@ -116,6 +176,9 @@ let AuthService = class AuthService {
                     subdomain: dto.subdomain,
                     contactEmail: dto.email,
                 },
+            });
+            await tx.tenantSettings.create({
+                data: { tenantId: tenant.id }
             });
             await tx.user.create({
                 data: {

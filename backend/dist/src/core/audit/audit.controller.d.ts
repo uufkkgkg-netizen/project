@@ -8,11 +8,11 @@ export declare class AuditController {
             createdAt: Date;
             tenantId: string | null;
             userId: string | null;
+            ipAddress: string | null;
             userEmail: string | null;
             action: string;
             entity: string;
             entityId: string | null;
-            ipAddress: string | null;
             statusCode: number | null;
             path: string | null;
             method: string | null;
@@ -27,13 +27,13 @@ export declare class AuditController {
         createdAt: Date;
         tenantId: string | null;
         userId: string | null;
+        ipAddress: string | null;
         userEmail: string | null;
         action: string;
         entity: string;
         entityId: string | null;
         oldValues: import("@prisma/client/runtime/library").JsonValue | null;
         newValues: import("@prisma/client/runtime/library").JsonValue | null;
-        ipAddress: string | null;
         userAgent: string | null;
         statusCode: number | null;
         path: string | null;

@@ -9,6 +9,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const core_1 = require("@nestjs/core");
+const csrf_guard_1 = require("./core/auth/guards/csrf.guard");
 const schedule_1 = require("@nestjs/schedule");
 const throttler_1 = require("@nestjs/throttler");
 const prisma_module_1 = require("./core/prisma/prisma.module");
@@ -72,6 +73,10 @@ exports.AppModule = AppModule = __decorate([
             {
                 provide: core_1.APP_GUARD,
                 useClass: throttler_1.ThrottlerGuard,
+            },
+            {
+                provide: core_1.APP_GUARD,
+                useClass: csrf_guard_1.CsrfGuard,
             },
             {
                 provide: core_1.APP_INTERCEPTOR,

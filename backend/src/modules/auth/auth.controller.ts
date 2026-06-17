@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, Res, Req, HttpCode, HttpStatus, UseGuards } from '@nestjs/common';
+import { Controller, Post, Get, Body, Res, Req, HttpCode, HttpStatus, UseGuards, UnauthorizedException } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 import { AuthService } from './auth.service';
@@ -9,13 +9,26 @@ import type { Response, Request } from 'express';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
-// sameSite:'none' + secure:true required for cross-origin cookies (different Render subdomains)
-// sameSite:'lax' for development (localhost)
+// Cookie options
 const COOKIE_OPTIONS = {
   httpOnly: true,
-  secure: isProduction,                               // HTTPS only in production
-  sameSite: (isProduction ? 'none' : 'lax') as 'none' | 'lax', // cross-origin on Render
-  maxAge: 24 * 60 * 60 * 1000,                       // 24 hours
+  secure: isProduction,
+  sameSite: (isProduction ? 'none' : 'lax') as 'none' | 'lax',
+  maxAge: 24 * 60 * 60 * 1000, // 1 day
+  path: '/',
+};
+
+const REFRESH_COOKIE_OPTIONS = {
+  ...COOKIE_OPTIONS,
+  maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+};
+
+// CSRF cookie is NOT httpOnly so the frontend can read it and send it in headers
+const CSRF_COOKIE_OPTIONS = {
+  httpOnly: false,
+  secure: isProduction,
+  sameSite: (isProduction ? 'none' : 'lax') as 'none' | 'lax',
+  maxAge: 24 * 60 * 60 * 1000,
   path: '/',
 };
 
@@ -24,56 +37,82 @@ const COOKIE_OPTIONS = {
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  // ── Login (rate-limited: 10 attempts / 60s) ──────────────────────────────
   @Post('login')
   @HttpCode(HttpStatus.OK)
   @Throttle({ auth: { ttl: 60000, limit: 10 } })
-  @ApiOperation({ summary: 'Login — sets HttpOnly cookie + returns token for cross-origin use' })
-  @ApiResponse({ status: 200 })
-  @ApiResponse({ status: 401, description: 'Invalid credentials' })
-  @ApiResponse({ status: 429, description: 'Too many attempts' })
+  @ApiOperation({ summary: 'Login — sets cookies + returns tokens' })
   async login(
     @Body() loginDto: LoginDto,
+    @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const result = await this.authService.login(loginDto.email, loginDto.password);
+    const ip = req.ip || req.socket.remoteAddress;
+    const userAgent = req.headers['user-agent'];
 
-    // Set HttpOnly cookie (XSS-safe — JS cannot read this)
+    const result = await this.authService.login(loginDto.email, loginDto.password, ip, userAgent);
+
     res.cookie('access_token', result.access_token, COOKIE_OPTIONS);
+    res.cookie('refresh_token', result.refreshToken, REFRESH_COOKIE_OPTIONS);
+    res.cookie('csrf_token', result.csrfToken, CSRF_COOKIE_OPTIONS);
 
-    // Also return token in body for cross-origin frontends that cannot read HttpOnly cookies
     return {
       access_token: result.access_token,
+      csrf_token: result.csrfToken,
       user: result.user,
     };
   }
 
-  // ── Get Current Session (validates cookie or bearer token) ───────────────
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Refresh access token using HttpOnly cookie' })
+  async refresh(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const refreshToken = req.cookies['refresh_token'];
+    if (!refreshToken) {
+      throw new UnauthorizedException('No refresh token provided');
+    }
+
+    const ip = req.ip || req.socket.remoteAddress;
+    const result = await this.authService.refreshToken(refreshToken, ip);
+
+    res.cookie('access_token', result.access_token, COOKIE_OPTIONS);
+    res.cookie('refresh_token', result.refreshToken, REFRESH_COOKIE_OPTIONS);
+    res.cookie('csrf_token', result.csrfToken, CSRF_COOKIE_OPTIONS);
+
+    return {
+      access_token: result.access_token,
+      csrf_token: result.csrfToken,
+      user: result.user,
+    };
+  }
+
   @Get('me')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Get current authenticated user session info' })
-  @ApiResponse({ status: 200, description: 'Returns current user + tenant info' })
-  @ApiResponse({ status: 401, description: 'Not authenticated' })
+  @ApiOperation({ summary: 'Get current session info' })
   async getMe(@Req() req: Request & { user: any }) {
     return this.authService.getMe(req.user.userId);
   }
 
-  // ── Logout — clear HttpOnly cookie ───────────────────────────────────────
   @Post('logout')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Logout — clears HttpOnly auth cookie' })
-  async logout(@Res({ passthrough: true }) res: Response) {
+  @ApiOperation({ summary: 'Logout — clears cookies and revokes refresh token' })
+  async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    const refreshToken = req.cookies['refresh_token'];
+    await this.authService.logout(refreshToken);
+
     res.clearCookie('access_token', { path: '/' });
+    res.clearCookie('refresh_token', { path: '/' });
+    res.clearCookie('csrf_token', { path: '/' });
+
     return { message: 'Logged out successfully' };
   }
 
-  // ── Register new Clinic/Tenant ────────────────────────────────────────────
   @Post('register')
   @Throttle({ auth: { ttl: 60000, limit: 5 } })
-  @ApiOperation({ summary: 'Register a new clinic (Tenant)' })
-  @ApiResponse({ status: 201, description: 'Clinic registered successfully' })
-  @ApiResponse({ status: 400, description: 'Validation failed' })
+  @ApiOperation({ summary: 'Register a new clinic' })
   async register(@Body() registerDto: RegisterDto) {
     return this.authService.registerTenant(registerDto);
   }

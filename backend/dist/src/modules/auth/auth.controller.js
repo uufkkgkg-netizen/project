@@ -28,24 +28,60 @@ const COOKIE_OPTIONS = {
     maxAge: 24 * 60 * 60 * 1000,
     path: '/',
 };
+const REFRESH_COOKIE_OPTIONS = {
+    ...COOKIE_OPTIONS,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+};
+const CSRF_COOKIE_OPTIONS = {
+    httpOnly: false,
+    secure: isProduction,
+    sameSite: (isProduction ? 'none' : 'lax'),
+    maxAge: 24 * 60 * 60 * 1000,
+    path: '/',
+};
 let AuthController = class AuthController {
     authService;
     constructor(authService) {
         this.authService = authService;
     }
-    async login(loginDto, res) {
-        const result = await this.authService.login(loginDto.email, loginDto.password);
+    async login(loginDto, req, res) {
+        const ip = req.ip || req.socket.remoteAddress;
+        const userAgent = req.headers['user-agent'];
+        const result = await this.authService.login(loginDto.email, loginDto.password, ip, userAgent);
         res.cookie('access_token', result.access_token, COOKIE_OPTIONS);
+        res.cookie('refresh_token', result.refreshToken, REFRESH_COOKIE_OPTIONS);
+        res.cookie('csrf_token', result.csrfToken, CSRF_COOKIE_OPTIONS);
         return {
             access_token: result.access_token,
+            csrf_token: result.csrfToken,
+            user: result.user,
+        };
+    }
+    async refresh(req, res) {
+        const refreshToken = req.cookies['refresh_token'];
+        if (!refreshToken) {
+            throw new common_1.UnauthorizedException('No refresh token provided');
+        }
+        const ip = req.ip || req.socket.remoteAddress;
+        const result = await this.authService.refreshToken(refreshToken, ip);
+        res.cookie('access_token', result.access_token, COOKIE_OPTIONS);
+        res.cookie('refresh_token', result.refreshToken, REFRESH_COOKIE_OPTIONS);
+        res.cookie('csrf_token', result.csrfToken, CSRF_COOKIE_OPTIONS);
+        return {
+            access_token: result.access_token,
+            csrf_token: result.csrfToken,
             user: result.user,
         };
     }
     async getMe(req) {
         return this.authService.getMe(req.user.userId);
     }
-    async logout(res) {
+    async logout(req, res) {
+        const refreshToken = req.cookies['refresh_token'];
+        await this.authService.logout(refreshToken);
         res.clearCookie('access_token', { path: '/' });
+        res.clearCookie('refresh_token', { path: '/' });
+        res.clearCookie('csrf_token', { path: '/' });
         return { message: 'Logged out successfully' };
     }
     async register(registerDto) {
@@ -57,23 +93,29 @@ __decorate([
     (0, common_1.Post)('login'),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     (0, throttler_1.Throttle)({ auth: { ttl: 60000, limit: 10 } }),
-    (0, swagger_1.ApiOperation)({ summary: 'Login — sets HttpOnly cookie + returns token for cross-origin use' }),
-    (0, swagger_1.ApiResponse)({ status: 200 }),
-    (0, swagger_1.ApiResponse)({ status: 401, description: 'Invalid credentials' }),
-    (0, swagger_1.ApiResponse)({ status: 429, description: 'Too many attempts' }),
+    (0, swagger_1.ApiOperation)({ summary: 'Login — sets cookies + returns tokens' }),
     __param(0, (0, common_1.Body)()),
-    __param(1, (0, common_1.Res)({ passthrough: true })),
+    __param(1, (0, common_1.Req)()),
+    __param(2, (0, common_1.Res)({ passthrough: true })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [login_dto_1.LoginDto, Object]),
+    __metadata("design:paramtypes", [login_dto_1.LoginDto, Object, Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "login", null);
+__decorate([
+    (0, common_1.Post)('refresh'),
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    (0, swagger_1.ApiOperation)({ summary: 'Refresh access token using HttpOnly cookie' }),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Res)({ passthrough: true })),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "refresh", null);
 __decorate([
     (0, common_1.Get)('me'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, swagger_1.ApiBearerAuth)(),
-    (0, swagger_1.ApiOperation)({ summary: 'Get current authenticated user session info' }),
-    (0, swagger_1.ApiResponse)({ status: 200, description: 'Returns current user + tenant info' }),
-    (0, swagger_1.ApiResponse)({ status: 401, description: 'Not authenticated' }),
+    (0, swagger_1.ApiOperation)({ summary: 'Get current session info' }),
     __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -82,18 +124,17 @@ __decorate([
 __decorate([
     (0, common_1.Post)('logout'),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
-    (0, swagger_1.ApiOperation)({ summary: 'Logout — clears HttpOnly auth cookie' }),
-    __param(0, (0, common_1.Res)({ passthrough: true })),
+    (0, swagger_1.ApiOperation)({ summary: 'Logout — clears cookies and revokes refresh token' }),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Res)({ passthrough: true })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "logout", null);
 __decorate([
     (0, common_1.Post)('register'),
     (0, throttler_1.Throttle)({ auth: { ttl: 60000, limit: 5 } }),
-    (0, swagger_1.ApiOperation)({ summary: 'Register a new clinic (Tenant)' }),
-    (0, swagger_1.ApiResponse)({ status: 201, description: 'Clinic registered successfully' }),
-    (0, swagger_1.ApiResponse)({ status: 400, description: 'Validation failed' }),
+    (0, swagger_1.ApiOperation)({ summary: 'Register a new clinic' }),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [register_dto_1.RegisterDto]),

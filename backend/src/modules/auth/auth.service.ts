@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import { UserRole } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
+import * as crypto from 'crypto';
 import { RegisterDto } from './dto/register.dto';
 
 @Injectable()
@@ -12,8 +13,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async login(email: string, pass: string) {
-    // Bypass tenant RLS to find user globally
+  async login(email: string, pass: string, ipAddress?: string, deviceInfo?: string) {
     const user = await this.prisma.user.findUnique({ where: { email } });
 
     if (!user || !user.isActive) {
@@ -25,7 +25,6 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    // Update last login timestamp
     await this.prisma.user.update({
       where: { id: user.id },
       data: { lastLogin: new Date() },
@@ -42,11 +41,81 @@ export class AuthService {
     };
 
     const access_token = await this.jwtService.signAsync(payload);
+    const csrfToken = crypto.randomBytes(32).toString('hex');
+    const refreshToken = crypto.randomBytes(64).toString('hex');
+
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + 7); // 7 days
+
+    await this.prisma.session.create({
+      data: {
+        userId: user.id,
+        refreshToken,
+        ipAddress: ipAddress || null,
+        deviceInfo: deviceInfo || null,
+        expiresAt,
+      },
+    });
 
     return {
       access_token,
+      csrfToken,
+      refreshToken,
       user: this.sanitizeUser(user),
     };
+  }
+
+  async refreshToken(refreshTokenString: string, ipAddress?: string) {
+    const session = await this.prisma.session.findUnique({
+      where: { refreshToken: refreshTokenString },
+      include: { user: true },
+    });
+
+    if (!session || session.isRevoked || session.expiresAt < new Date()) {
+      throw new UnauthorizedException('Invalid or expired refresh token');
+    }
+
+    const user = session.user;
+    if (!user.isActive) {
+      throw new UnauthorizedException('User is inactive');
+    }
+
+    const payload = {
+      sub: user.id,
+      email: user.email,
+      tenantId: user.tenantId,
+      role: user.role,
+      isSuperAdmin: user.role === UserRole.SUPER_ADMIN,
+    };
+
+    const access_token = await this.jwtService.signAsync(payload);
+    const csrfToken = crypto.randomBytes(32).toString('hex');
+    
+    // Rotate refresh token
+    const newRefreshToken = crypto.randomBytes(64).toString('hex');
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + 7);
+
+    await this.prisma.session.update({
+      where: { id: session.id },
+      data: {
+        refreshToken: newRefreshToken,
+        expiresAt,
+        ipAddress: ipAddress || session.ipAddress,
+      },
+    });
+
+    return { access_token, csrfToken, refreshToken: newRefreshToken, user: this.sanitizeUser(user) };
+  }
+
+  async logout(refreshTokenString?: string) {
+    if (refreshTokenString) {
+      await this.prisma.session.updateMany({
+        where: { refreshToken: refreshTokenString },
+        data: { isRevoked: true },
+      });
+    }
+    return { message: 'Logged out successfully' };
   }
 
   async getMe(userId: string) {
@@ -61,6 +130,7 @@ export class AuthService {
             defaultCurrency: true,
             subscriptionStatus: true,
             subscriptionPlan: true,
+            settings: true,
           },
         },
       },
@@ -87,6 +157,10 @@ export class AuthService {
           subdomain: dto.subdomain,
           contactEmail: dto.email,
         },
+      });
+      
+      await tx.tenantSettings.create({
+        data: { tenantId: tenant.id }
       });
 
       await tx.user.create({

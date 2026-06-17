@@ -26,6 +26,11 @@ model Tenant {
   createdAt           DateTime  @default(now()) @map("created_at") @db.Timestamptz
   updatedAt           DateTime  @updatedAt @map("updated_at") @db.Timestamptz
 
+  primaryColor        String?   @default("#E11D48") @map("primary_color") @db.VarChar(20)
+  accentColor         String?   @default("#9333EA") @map("accent_color") @db.VarChar(20)
+  enabledModules      String[]  @default(["patients","appointments","billing","records","prescriptions"]) @map("enabled_modules")
+  archivedAt          DateTime? @map("archived_at") @db.Timestamptz
+
   users               User[]
   patients            Patient[]
   appointments        Appointment[]
@@ -38,9 +43,65 @@ model Tenant {
   visits              Visit[]
   payments            Payment[]
   whatsappLogs        WhatsappLog[]
+  settings            TenantSettings?
 
   @@map("tenants")
 }
+
+// Full clinic operational settings (one-to-one with Tenant)
+model TenantSettings {
+  id                  String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId            String    @unique @map("tenant_id") @db.Uuid
+  tenant              Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  // General
+  timezone            String    @default("Asia/Baghdad") @db.VarChar(50)
+  language            String    @default("ar") @db.VarChar(10)
+
+  // Financial
+  taxRate             Decimal?  @map("tax_rate") @db.Decimal(5, 2)
+  invoicePrefix       String    @default("INV") @map("invoice_prefix") @db.VarChar(20)
+  invoiceStartNumber  Int       @default(1000) @map("invoice_start_number")
+  discountRules       Json?     @map("discount_rules")
+
+  // Operations & Appointments
+  workingDays         String[]  @default(["SAT","SUN","MON","TUE","WED","THU"]) @map("working_days")
+  workStartTime       String    @default("09:00") @map("work_start_time") @db.VarChar(5)
+  workEndTime         String    @default("17:00") @map("work_end_time") @db.VarChar(5)
+  appointmentDuration Int       @default(30) @map("appointment_duration")
+  appointmentBuffer   Int       @default(5) @map("appointment_buffer")
+  maxDailyAppointments Int      @default(20) @map("max_daily_appointments")
+  noShowPolicy        String?   @map("no_show_policy") @db.Text
+
+  // Print & Identity
+  doctorName          String?   @map("doctor_name") @db.VarChar(255)
+  doctorSpecialty     String?   @map("doctor_specialty") @db.VarChar(255)
+  licenseNumber       String?   @map("license_number") @db.VarChar(100)
+  printHeader         String?   @map("print_header") @db.Text
+  printFooter         String?   @map("print_footer") @db.Text
+  stampImageUrl       String?   @map("stamp_image_url") @db.VarChar(500)
+  signatureImageUrl   String?   @map("signature_image_url") @db.VarChar(500)
+
+  // Notifications
+  whatsappEnabled     Boolean   @default(false) @map("whatsapp_enabled")
+  reminderHoursBefore Int       @default(24) @map("reminder_hours_before")
+  quietHoursStart     String    @default("22:00") @map("quiet_hours_start") @db.VarChar(5)
+  quietHoursEnd       String    @default("08:00") @map("quiet_hours_end") @db.VarChar(5)
+  sendConfirmation    Boolean   @default(true) @map("send_confirmation")
+  sendReminder        Boolean   @default(true) @map("send_reminder")
+  sendAfterVisit      Boolean   @default(false) @map("send_after_visit")
+
+  // Security
+  sessionDurationMins Int       @default(1440) @map("session_duration_mins")
+  require2FA          Boolean   @default(false) @map("require_2fa")
+  passwordMinLength   Int       @default(8) @map("password_min_length")
+
+  createdAt           DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt           DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@map("tenant_settings")
+}
+
 
 enum AppointmentStatus {
   PENDING
@@ -80,6 +141,7 @@ model User {
   updatedAt    DateTime  @updatedAt @map("updated_at") @db.Timestamptz
 
   tenant       Tenant?   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  sessions     Session[]
   createdTemplates MedicalTemplate[]
   visits       Visit[]
   ultrasoundReports UltrasoundReport[]
@@ -88,6 +150,23 @@ model User {
   @@index([tenantId])
   @@index([email])
   @@map("users")
+}
+
+model Session {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId       String    @map("user_id") @db.Uuid
+  refreshToken String    @unique @map("refresh_token") @db.VarChar(500)
+  deviceInfo   String?   @map("device_info") @db.Text
+  ipAddress    String?   @map("ip_address") @db.VarChar(45)
+  expiresAt    DateTime  @map("expires_at") @db.Timestamptz
+  isRevoked    Boolean   @default(false) @map("is_revoked")
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt    DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("sessions")
 }
 
 model Patient {
