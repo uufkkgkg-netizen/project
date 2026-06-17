@@ -105,6 +105,14 @@ model Patient {
   createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz
   updatedAt      DateTime  @updatedAt @map("updated_at") @db.Timestamptz
 
+  // --- Personal & Demographic Fields ---
+  nationalId           String?   @map("national_id") @db.VarChar(20)           // الرقم الوطني
+  maritalStatus        String?   @map("marital_status") @db.VarChar(20)        // الحالة الاجتماعية
+  husbandName          String?   @map("husband_name") @db.VarChar(255)         // اسم الزوج
+  address              String?   @db.Text                                       // العنوان السكني
+  emergencyContactName  String?  @map("emergency_contact_name") @db.VarChar(255) // اسم جهة الطوارئ
+  emergencyContactPhone String?  @map("emergency_contact_phone") @db.VarChar(20) // هاتف جهة الطوارئ
+
   // --- OB/GYN Specific Fields ---
   // Obstetric History
   gravida           Int?      @db.Integer                         // عدد مرات الحمل الكلية

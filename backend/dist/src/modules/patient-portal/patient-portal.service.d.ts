@@ -28,12 +28,12 @@ export declare class PatientPortalService {
             createdAt: Date;
             updatedAt: Date;
             tenantId: string;
-            status: import(".prisma/client").$Enums.AppointmentStatus;
             patientId: string;
             doctorId: string;
             notes: string | null;
             appointmentDate: Date;
             durationMinutes: number;
+            status: import(".prisma/client").$Enums.AppointmentStatus;
         })[];
         pastAppointments: ({
             doctor: {
@@ -45,12 +45,12 @@ export declare class PatientPortalService {
             createdAt: Date;
             updatedAt: Date;
             tenantId: string;
-            status: import(".prisma/client").$Enums.AppointmentStatus;
             patientId: string;
             doctorId: string;
             notes: string | null;
             appointmentDate: Date;
             durationMinutes: number;
+            status: import(".prisma/client").$Enums.AppointmentStatus;
         })[];
         ultrasounds: ({
             doctor: {
@@ -62,9 +62,9 @@ export declare class PatientPortalService {
             createdAt: Date;
             updatedAt: Date;
             tenantId: string;
-            status: import(".prisma/client").$Enums.ReportStatus;
             patientId: string;
             doctorId: string | null;
+            status: import(".prisma/client").$Enums.ReportStatus;
             templateId: string | null;
             date: Date;
             findings: string;

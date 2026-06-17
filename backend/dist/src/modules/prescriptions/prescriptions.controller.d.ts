@@ -48,6 +48,7 @@ export declare class PrescriptionsController {
     findAllByPatient(patientId: string, req: any): Promise<({
         patient: {
             id: string;
+            address: string | null;
             isActive: boolean;
             createdAt: Date;
             updatedAt: Date;
@@ -60,6 +61,11 @@ export declare class PrescriptionsController {
             allergies: string | null;
             medicalHistory: string | null;
             medicalNotes: string | null;
+            nationalId: string | null;
+            maritalStatus: string | null;
+            husbandName: string | null;
+            emergencyContactName: string | null;
+            emergencyContactPhone: string | null;
             gravida: number | null;
             para: number | null;
             abortus: number | null;
@@ -104,6 +110,7 @@ export declare class PrescriptionsController {
     findOne(id: string, req: any): Promise<{
         patient: {
             id: string;
+            address: string | null;
             isActive: boolean;
             createdAt: Date;
             updatedAt: Date;
@@ -116,6 +123,11 @@ export declare class PrescriptionsController {
             allergies: string | null;
             medicalHistory: string | null;
             medicalNotes: string | null;
+            nationalId: string | null;
+            maritalStatus: string | null;
+            husbandName: string | null;
+            emergencyContactName: string | null;
+            emergencyContactPhone: string | null;
             gravida: number | null;
             para: number | null;
             abortus: number | null;

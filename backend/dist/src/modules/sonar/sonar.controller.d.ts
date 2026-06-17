@@ -6,6 +6,7 @@ export declare class SonarController {
     create(createSonarDto: CreateSonarDto, req: any): Promise<{
         patient: {
             id: string;
+            address: string | null;
             isActive: boolean;
             createdAt: Date;
             updatedAt: Date;
@@ -18,6 +19,11 @@ export declare class SonarController {
             allergies: string | null;
             medicalHistory: string | null;
             medicalNotes: string | null;
+            nationalId: string | null;
+            maritalStatus: string | null;
+            husbandName: string | null;
+            emergencyContactName: string | null;
+            emergencyContactPhone: string | null;
             gravida: number | null;
             para: number | null;
             abortus: number | null;
@@ -35,9 +41,9 @@ export declare class SonarController {
         createdAt: Date;
         updatedAt: Date;
         tenantId: string;
-        status: import(".prisma/client").$Enums.ReportStatus;
         patientId: string;
         doctorId: string | null;
+        status: import(".prisma/client").$Enums.ReportStatus;
         templateId: string | null;
         date: Date;
         findings: string;
@@ -53,9 +59,9 @@ export declare class SonarController {
         createdAt: Date;
         updatedAt: Date;
         tenantId: string;
-        status: import(".prisma/client").$Enums.ReportStatus;
         patientId: string;
         doctorId: string | null;
+        status: import(".prisma/client").$Enums.ReportStatus;
         templateId: string | null;
         date: Date;
         findings: string;
@@ -65,6 +71,7 @@ export declare class SonarController {
     findOne(id: string, req: any): Promise<{
         patient: {
             id: string;
+            address: string | null;
             isActive: boolean;
             createdAt: Date;
             updatedAt: Date;
@@ -77,6 +84,11 @@ export declare class SonarController {
             allergies: string | null;
             medicalHistory: string | null;
             medicalNotes: string | null;
+            nationalId: string | null;
+            maritalStatus: string | null;
+            husbandName: string | null;
+            emergencyContactName: string | null;
+            emergencyContactPhone: string | null;
             gravida: number | null;
             para: number | null;
             abortus: number | null;
@@ -94,9 +106,9 @@ export declare class SonarController {
         createdAt: Date;
         updatedAt: Date;
         tenantId: string;
-        status: import(".prisma/client").$Enums.ReportStatus;
         patientId: string;
         doctorId: string | null;
+        status: import(".prisma/client").$Enums.ReportStatus;
         templateId: string | null;
         date: Date;
         findings: string;

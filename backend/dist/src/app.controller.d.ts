@@ -2,20 +2,17 @@ import { AppService } from './app.service';
 export declare class AppController {
     private readonly appService;
     constructor(appService: AppService);
-    getHello(): {
+    getRoot(): {
         status: string;
-        message: string;
+        service: string;
         version: string;
+        timestamp: string;
     };
-    getStatus(): Promise<{
+    getHealth(): {
         status: string;
-        usersCount: any;
-        version: string;
-        error?: undefined;
-    } | {
-        status: string;
-        error: any;
-        version: string;
-        usersCount?: undefined;
-    }>;
+        uptime: number;
+        memory: NodeJS.MemoryUsage;
+        timestamp: string;
+        environment: string;
+    };
 }

@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ScheduleModule } from '@nestjs/schedule';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { PrismaModule } from './core/prisma/prisma.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { AppController } from './app.controller';
@@ -24,26 +25,44 @@ import { WhatsappModule } from './whatsapp/whatsapp.module';
 @Module({
   imports: [
     ScheduleModule.forRoot(),
-    PrismaModule, 
-    AuditModule, 
-    AuthModule, 
-    PatientsModule, 
-    AppointmentsModule, 
-    MedicalRecordsModule, 
-    AnalyticsModule, 
-    PrescriptionsModule, 
-    BillingModule, 
-    SonarModule, 
-    AdminModule, 
-    StaffModule, 
-    MedicalTemplatesModule, 
-    UltrasoundReportsModule, 
-    SettingsModule, 
-    WhatsappModule
+    // ── Rate Limiting: 100 requests / 60 seconds globally ──────────────────
+    ThrottlerModule.forRoot([
+      {
+        name: 'global',
+        ttl: 60000,   // 60 seconds
+        limit: 100,   // max 100 requests
+      },
+      {
+        name: 'auth',
+        ttl: 60000,   // 60 seconds
+        limit: 10,    // max 10 login attempts per minute
+      },
+    ]),
+    PrismaModule,
+    AuditModule,
+    AuthModule,
+    PatientsModule,
+    AppointmentsModule,
+    MedicalRecordsModule,
+    AnalyticsModule,
+    PrescriptionsModule,
+    BillingModule,
+    SonarModule,
+    AdminModule,
+    StaffModule,
+    MedicalTemplatesModule,
+    UltrasoundReportsModule,
+    SettingsModule,
+    WhatsappModule,
   ],
   controllers: [AppController],
   providers: [
     AppService,
+    // ── Apply rate limiting globally ──────────────────────────────────────
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
     {
       provide: APP_INTERCEPTOR,
       useClass: TenantInterceptor,

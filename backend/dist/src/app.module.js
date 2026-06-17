@@ -10,6 +10,7 @@ exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const core_1 = require("@nestjs/core");
 const schedule_1 = require("@nestjs/schedule");
+const throttler_1 = require("@nestjs/throttler");
 const prisma_module_1 = require("./core/prisma/prisma.module");
 const auth_module_1 = require("./modules/auth/auth.module");
 const app_controller_1 = require("./app.controller");
@@ -36,6 +37,18 @@ exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
             schedule_1.ScheduleModule.forRoot(),
+            throttler_1.ThrottlerModule.forRoot([
+                {
+                    name: 'global',
+                    ttl: 60000,
+                    limit: 100,
+                },
+                {
+                    name: 'auth',
+                    ttl: 60000,
+                    limit: 10,
+                },
+            ]),
             prisma_module_1.PrismaModule,
             audit_module_1.AuditModule,
             auth_module_1.AuthModule,
@@ -51,11 +64,15 @@ exports.AppModule = AppModule = __decorate([
             medical_templates_module_1.MedicalTemplatesModule,
             ultrasound_reports_module_1.UltrasoundReportsModule,
             settings_module_1.SettingsModule,
-            whatsapp_module_1.WhatsappModule
+            whatsapp_module_1.WhatsappModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [
             app_service_1.AppService,
+            {
+                provide: core_1.APP_GUARD,
+                useClass: throttler_1.ThrottlerGuard,
+            },
             {
                 provide: core_1.APP_INTERCEPTOR,
                 useClass: tenant_interceptor_1.TenantInterceptor,

@@ -2,7 +2,8 @@ import { IsString, IsOptional, IsDateString, IsInt, MaxLength, Min } from 'class
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreatePatientDto {
-  @ApiProperty({ example: 'Sarah Ali' })
+  // ── Basic Info ─────────────────────────────────────────────────────────────
+  @ApiProperty({ example: 'Sarah Ali Mohammad' })
   @IsString()
   @MaxLength(255)
   fullName: string;
@@ -24,47 +25,99 @@ export class CreatePatientDto {
   @MaxLength(5)
   bloodType?: string;
 
-  @ApiPropertyOptional({ example: 'No known allergies.' })
+  // ── Personal & Demographic ─────────────────────────────────────────────────
+  @ApiPropertyOptional({ example: '19810101234567' })
   @IsOptional()
   @IsString()
-  medicalNotes?: string;
+  @MaxLength(20)
+  nationalId?: string;
 
-  @ApiPropertyOptional({ example: 'Penicillin' })
+  @ApiPropertyOptional({ example: 'married', enum: ['single', 'married', 'divorced', 'widowed'] })
+  @IsOptional()
+  @IsString()
+  @MaxLength(20)
+  maritalStatus?: string;
+
+  @ApiPropertyOptional({ example: 'Ahmad Mohammad' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  husbandName?: string;
+
+  @ApiPropertyOptional({ example: 'Baghdad, Karada, Street 14' })
+  @IsOptional()
+  @IsString()
+  address?: string;
+
+  @ApiPropertyOptional({ example: 'Ali Mohammad' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  emergencyContactName?: string;
+
+  @ApiPropertyOptional({ example: '+9647901234567' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(20)
+  emergencyContactPhone?: string;
+
+  // ── Medical History ────────────────────────────────────────────────────────
+  @ApiPropertyOptional({ example: 'Penicillin, Sulfa' })
   @IsOptional()
   @IsString()
   allergies?: string;
 
-  @ApiPropertyOptional({ example: 'Hypertension, Diabetes Type 2' })
+  @ApiPropertyOptional({ example: 'Hypertension since 2018' })
   @IsOptional()
   @IsString()
   medicalHistory?: string;
 
-  // --- OB/GYN Fields ---
-  @ApiPropertyOptional({ example: 3, description: 'Gravida - total number of pregnancies' })
+  @ApiPropertyOptional({ example: 'Diabetes, Hypertension' })
+  @IsOptional()
+  @IsString()
+  chronicDiseases?: string;
+
+  @ApiPropertyOptional({ example: 'C-Section 2020, Appendectomy 2018' })
+  @IsOptional()
+  @IsString()
+  previousSurgeries?: string;
+
+  @ApiPropertyOptional({ example: 'Mother has diabetes' })
+  @IsOptional()
+  @IsString()
+  familyHistory?: string;
+
+  @ApiPropertyOptional({ example: 'Patient prefers female doctors only' })
+  @IsOptional()
+  @IsString()
+  medicalNotes?: string;
+
+  // ── OB/GYN Fields ─────────────────────────────────────────────────────────
+  @ApiPropertyOptional({ example: 3, description: 'Gravida — total pregnancies' })
   @IsOptional()
   @IsInt()
   @Min(0)
   gravida?: number;
 
-  @ApiPropertyOptional({ example: 2, description: 'Para - number of deliveries' })
+  @ApiPropertyOptional({ example: 2, description: 'Para — deliveries' })
   @IsOptional()
   @IsInt()
   @Min(0)
   para?: number;
 
-  @ApiPropertyOptional({ example: 1, description: 'Abortus - number of abortions/miscarriages' })
+  @ApiPropertyOptional({ example: 1, description: 'Abortus — miscarriages/abortions' })
   @IsOptional()
   @IsInt()
   @Min(0)
   abortus?: number;
 
-  @ApiPropertyOptional({ example: 2, description: 'Number of living children' })
+  @ApiPropertyOptional({ example: 2, description: 'Living children' })
   @IsOptional()
   @IsInt()
   @Min(0)
   livingChildren?: number;
 
-  @ApiPropertyOptional({ example: '2025-01-01', description: 'Last Menstrual Period date' })
+  @ApiPropertyOptional({ example: '2025-01-01', description: 'Last Menstrual Period' })
   @IsOptional()
   @IsDateString()
   lastMenstrualPeriod?: string;
@@ -74,30 +127,15 @@ export class CreatePatientDto {
   @IsDateString()
   estimatedDueDate?: string;
 
-  @ApiPropertyOptional({ example: '28 weeks', description: 'Gestational age' })
+  @ApiPropertyOptional({ example: '28 weeks + 3 days' })
   @IsOptional()
   @IsString()
   @MaxLength(50)
   gestationalAge?: string;
 
-  @ApiPropertyOptional({ example: 'IUD', description: 'Contraceptive method' })
+  @ApiPropertyOptional({ example: 'IUD', enum: ['none', 'pills', 'iud', 'injection', 'implant', 'condom', 'other'] })
   @IsOptional()
   @IsString()
   @MaxLength(100)
   contraceptiveMethod?: string;
-
-  @ApiPropertyOptional({ example: 'C-Section 2020' })
-  @IsOptional()
-  @IsString()
-  previousSurgeries?: string;
-
-  @ApiPropertyOptional({ example: 'Diabetes, Hypertension' })
-  @IsOptional()
-  @IsString()
-  chronicDiseases?: string;
-
-  @ApiPropertyOptional({ example: 'Mother has diabetes' })
-  @IsOptional()
-  @IsString()
-  familyHistory?: string;
 }

@@ -13,24 +13,35 @@ exports.JwtStrategy = void 0;
 const passport_jwt_1 = require("passport-jwt");
 const passport_1 = require("@nestjs/passport");
 const common_1 = require("@nestjs/common");
+function cookieOrBearerExtractor(req) {
+    if (req?.cookies?.access_token) {
+        return req.cookies.access_token;
+    }
+    const authHeader = req?.headers?.authorization;
+    if (authHeader?.startsWith('Bearer ')) {
+        return authHeader.substring(7);
+    }
+    return null;
+}
 let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(passport_jwt_1.Strategy) {
     constructor() {
         super({
-            jwtFromRequest: passport_jwt_1.ExtractJwt.fromAuthHeaderAsBearerToken(),
+            jwtFromRequest: cookieOrBearerExtractor,
             ignoreExpiration: false,
-            secretOrKey: process.env.JWT_SECRET || 'super_secret_key',
+            secretOrKey: process.env.JWT_SECRET || 'CHANGE_THIS_IN_PRODUCTION_USE_ENV_VAR',
+            passReqToCallback: false,
         });
     }
     async validate(payload) {
-        if (!payload.sub) {
-            throw new common_1.UnauthorizedException();
+        if (!payload?.sub) {
+            throw new common_1.UnauthorizedException('Invalid token payload');
         }
         return {
             userId: payload.sub,
             email: payload.email,
             tenantId: payload.tenantId,
             role: payload.role,
-            isSuperAdmin: payload.isSuperAdmin
+            isSuperAdmin: payload.isSuperAdmin ?? false,
         };
     }
 };

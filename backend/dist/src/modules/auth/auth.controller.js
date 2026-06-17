@@ -15,9 +15,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
+const throttler_1 = require("@nestjs/throttler");
 const auth_service_1 = require("./auth.service");
 const login_dto_1 = require("./dto/login.dto");
 const register_dto_1 = require("./dto/register.dto");
+const jwt_auth_guard_1 = require("../../core/auth/guards/jwt-auth.guard");
+const COOKIE_OPTIONS = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 24 * 60 * 60 * 1000,
+    path: '/',
+};
 let AuthController = class AuthController {
     authService;
     constructor(authService) {
@@ -25,17 +34,14 @@ let AuthController = class AuthController {
     }
     async login(loginDto, res) {
         const result = await this.authService.login(loginDto.email, loginDto.password);
-        res.cookie('access_token', result.access_token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'lax',
-            maxAge: 24 * 60 * 60 * 1000,
-            path: '/',
-        });
+        res.cookie('access_token', result.access_token, COOKIE_OPTIONS);
         return {
             access_token: result.access_token,
             user: result.user,
         };
+    }
+    async getMe(req) {
+        return this.authService.getMe(req.user.userId);
     }
     async logout(res) {
         res.clearCookie('access_token', { path: '/' });
@@ -49,9 +55,11 @@ exports.AuthController = AuthController;
 __decorate([
     (0, common_1.Post)('login'),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
-    (0, swagger_1.ApiOperation)({ summary: 'User login — sets HttpOnly cookie and returns token' }),
-    (0, swagger_1.ApiResponse)({ status: 200, description: 'Return JWT token, user info, and set HttpOnly cookie.' }),
-    (0, swagger_1.ApiResponse)({ status: 401, description: 'Invalid credentials.' }),
+    (0, throttler_1.Throttle)({ auth: { ttl: 60000, limit: 10 } }),
+    (0, swagger_1.ApiOperation)({ summary: 'Login — sets HttpOnly cookie + returns token for cross-origin use' }),
+    (0, swagger_1.ApiResponse)({ status: 200 }),
+    (0, swagger_1.ApiResponse)({ status: 401, description: 'Invalid credentials' }),
+    (0, swagger_1.ApiResponse)({ status: 429, description: 'Too many attempts' }),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Res)({ passthrough: true })),
     __metadata("design:type", Function),
@@ -59,9 +67,21 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "login", null);
 __decorate([
+    (0, common_1.Get)('me'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, swagger_1.ApiOperation)({ summary: 'Get current authenticated user session info' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Returns current user + tenant info' }),
+    (0, swagger_1.ApiResponse)({ status: 401, description: 'Not authenticated' }),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "getMe", null);
+__decorate([
     (0, common_1.Post)('logout'),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
-    (0, swagger_1.ApiOperation)({ summary: 'Clear auth cookie to log out' }),
+    (0, swagger_1.ApiOperation)({ summary: 'Logout — clears HttpOnly auth cookie' }),
     __param(0, (0, common_1.Res)({ passthrough: true })),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -69,9 +89,10 @@ __decorate([
 ], AuthController.prototype, "logout", null);
 __decorate([
     (0, common_1.Post)('register'),
-    (0, swagger_1.ApiOperation)({ summary: 'Register a new Tenant (Clinic)' }),
-    (0, swagger_1.ApiResponse)({ status: 201, description: 'Tenant successfully registered.' }),
-    (0, swagger_1.ApiResponse)({ status: 400, description: 'Bad Request.' }),
+    (0, throttler_1.Throttle)({ auth: { ttl: 60000, limit: 5 } }),
+    (0, swagger_1.ApiOperation)({ summary: 'Register a new clinic (Tenant)' }),
+    (0, swagger_1.ApiResponse)({ status: 201, description: 'Clinic registered successfully' }),
+    (0, swagger_1.ApiResponse)({ status: 400, description: 'Validation failed' }),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [register_dto_1.RegisterDto]),

@@ -3,9 +3,18 @@ export declare class CreatePatientDto {
     dateOfBirth?: string;
     phone?: string;
     bloodType?: string;
-    medicalNotes?: string;
+    nationalId?: string;
+    maritalStatus?: string;
+    husbandName?: string;
+    address?: string;
+    emergencyContactName?: string;
+    emergencyContactPhone?: string;
     allergies?: string;
     medicalHistory?: string;
+    chronicDiseases?: string;
+    previousSurgeries?: string;
+    familyHistory?: string;
+    medicalNotes?: string;
     gravida?: number;
     para?: number;
     abortus?: number;
@@ -14,7 +23,4 @@ export declare class CreatePatientDto {
     estimatedDueDate?: string;
     gestationalAge?: string;
     contraceptiveMethod?: string;
-    previousSurgeries?: string;
-    chronicDiseases?: string;
-    familyHistory?: string;
 }

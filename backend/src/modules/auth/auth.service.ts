@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException, BadRequestException } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import { UserRole } from '@prisma/client';
@@ -13,10 +13,8 @@ export class AuthService {
   ) {}
 
   async login(email: string, pass: string) {
-    // Intentionally bypass RLS here to find the user globally across all tenants
-    const user = await this.prisma.user.findUnique({
-      where: { email },
-    });
+    // Bypass tenant RLS to find user globally
+    const user = await this.prisma.user.findUnique({ where: { email } });
 
     if (!user || !user.isActive) {
       throw new UnauthorizedException('Invalid credentials');
@@ -27,54 +25,71 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    // Update last login
+    // Update last login timestamp
     await this.prisma.user.update({
       where: { id: user.id },
-      data: { lastLogin: new Date() }
+      data: { lastLogin: new Date() },
     });
 
     const isSuperAdmin = user.role === UserRole.SUPER_ADMIN;
 
-    const payload = { 
-      sub: user.id, 
-      email: user.email, 
+    const payload = {
+      sub: user.id,
+      email: user.email,
       tenantId: user.tenantId,
       role: user.role,
-      isSuperAdmin 
+      isSuperAdmin,
     };
 
+    const access_token = await this.jwtService.signAsync(payload);
+
     return {
-      access_token: await this.jwtService.signAsync(payload),
-      user: {
-        id: user.id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        tenantId: user.tenantId,
-        avatarUrl: user.avatarUrl,
-        role: user.role
-      }
+      access_token,
+      user: this.sanitizeUser(user),
+    };
+  }
+
+  async getMe(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        tenant: {
+          select: {
+            id: true,
+            name: true,
+            logoUrl: true,
+            defaultCurrency: true,
+            subscriptionStatus: true,
+            subscriptionPlan: true,
+          },
+        },
+      },
+    });
+
+    if (!user || !user.isActive) {
+      throw new UnauthorizedException('User not found or inactive');
+    }
+
+    return {
+      ...this.sanitizeUser(user),
+      tenant: (user as any).tenant,
     };
   }
 
   async registerTenant(dto: RegisterDto) {
-    // 1. Hash password
-    const salt = await bcrypt.genSalt();
+    const salt = await bcrypt.genSalt(12);
     const passwordHash = await bcrypt.hash(dto.password, salt);
 
-    // 2. Wrap in regular Prisma Transaction (bypass RLS for global creation)
     return this.prisma.$transaction(async (tx) => {
-      // Create Tenant
       const tenant = await tx.tenant.create({
         data: {
           name: dto.clinicName,
           subdomain: dto.subdomain,
           contactEmail: dto.email,
-        }
+        },
       });
 
-      // Create Admin User for this Tenant
-      const user = await tx.user.create({
+      await tx.user.create({
         data: {
           tenantId: tenant.id,
           role: UserRole.TENANT_ADMIN,
@@ -82,10 +97,23 @@ export class AuthService {
           lastName: dto.lastName,
           email: dto.email,
           passwordHash,
-        }
+        },
       });
 
       return { message: 'Tenant successfully registered', tenantId: tenant.id };
     });
+  }
+
+  private sanitizeUser(user: any) {
+    return {
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      tenantId: user.tenantId,
+      avatarUrl: user.avatarUrl,
+      role: user.role,
+      isSuperAdmin: user.role === UserRole.SUPER_ADMIN,
+    };
   }
 }

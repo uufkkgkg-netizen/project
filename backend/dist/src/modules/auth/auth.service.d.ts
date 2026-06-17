@@ -8,17 +8,30 @@ export declare class AuthService {
     login(email: string, pass: string): Promise<{
         access_token: string;
         user: {
-            id: string;
-            firstName: string;
-            lastName: string;
-            email: string;
-            tenantId: string | null;
-            avatarUrl: string | null;
-            role: import(".prisma/client").$Enums.UserRole;
+            id: any;
+            firstName: any;
+            lastName: any;
+            email: any;
+            tenantId: any;
+            avatarUrl: any;
+            role: any;
+            isSuperAdmin: boolean;
         };
+    }>;
+    getMe(userId: string): Promise<{
+        tenant: any;
+        id: any;
+        firstName: any;
+        lastName: any;
+        email: any;
+        tenantId: any;
+        avatarUrl: any;
+        role: any;
+        isSuperAdmin: boolean;
     }>;
     registerTenant(dto: RegisterDto): Promise<{
         message: string;
         tenantId: string;
     }>;
+    private sanitizeUser;
 }

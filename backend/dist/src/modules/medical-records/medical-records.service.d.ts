@@ -7,6 +7,7 @@ export declare class MedicalRecordsService {
     create(createDto: CreateMedicalRecordDto, tenantIdParam: string): Promise<({
         patient: {
             id: string;
+            address: string | null;
             isActive: boolean;
             createdAt: Date;
             updatedAt: Date;
@@ -19,6 +20,11 @@ export declare class MedicalRecordsService {
             allergies: string | null;
             medicalHistory: string | null;
             medicalNotes: string | null;
+            nationalId: string | null;
+            maritalStatus: string | null;
+            husbandName: string | null;
+            emergencyContactName: string | null;
+            emergencyContactPhone: string | null;
             gravida: number | null;
             para: number | null;
             abortus: number | null;
@@ -95,6 +101,7 @@ export declare class MedicalRecordsService {
     findOne(id: string): Promise<{
         patient: {
             id: string;
+            address: string | null;
             isActive: boolean;
             createdAt: Date;
             updatedAt: Date;
@@ -107,6 +114,11 @@ export declare class MedicalRecordsService {
             allergies: string | null;
             medicalHistory: string | null;
             medicalNotes: string | null;
+            nationalId: string | null;
+            maritalStatus: string | null;
+            husbandName: string | null;
+            emergencyContactName: string | null;
+            emergencyContactPhone: string | null;
             gravida: number | null;
             para: number | null;
             abortus: number | null;

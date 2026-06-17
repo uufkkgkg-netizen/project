@@ -10,12 +10,12 @@ export declare class AppointmentsService {
         createdAt: Date;
         updatedAt: Date;
         tenantId: string;
-        status: import(".prisma/client").$Enums.AppointmentStatus;
         patientId: string;
         doctorId: string;
         notes: string | null;
         appointmentDate: Date;
         durationMinutes: number;
+        status: import(".prisma/client").$Enums.AppointmentStatus;
     }>;
     findAll(userRole: string, userId: string): Promise<({
         patient: {
@@ -34,12 +34,12 @@ export declare class AppointmentsService {
         createdAt: Date;
         updatedAt: Date;
         tenantId: string;
-        status: import(".prisma/client").$Enums.AppointmentStatus;
         patientId: string;
         doctorId: string;
         notes: string | null;
         appointmentDate: Date;
         durationMinutes: number;
+        status: import(".prisma/client").$Enums.AppointmentStatus;
     })[]>;
     findOne(id: string, userRole: string, userId: string): Promise<{
         patient: {
@@ -58,36 +58,36 @@ export declare class AppointmentsService {
         createdAt: Date;
         updatedAt: Date;
         tenantId: string;
-        status: import(".prisma/client").$Enums.AppointmentStatus;
         patientId: string;
         doctorId: string;
         notes: string | null;
         appointmentDate: Date;
         durationMinutes: number;
+        status: import(".prisma/client").$Enums.AppointmentStatus;
     }>;
     update(id: string, updateAppointmentDto: UpdateAppointmentDto, userRole: string, userId: string): Promise<{
         id: string;
         createdAt: Date;
         updatedAt: Date;
         tenantId: string;
-        status: import(".prisma/client").$Enums.AppointmentStatus;
         patientId: string;
         doctorId: string;
         notes: string | null;
         appointmentDate: Date;
         durationMinutes: number;
+        status: import(".prisma/client").$Enums.AppointmentStatus;
     }>;
     remove(id: string, userRole: string, userId: string): Promise<{
         id: string;
         createdAt: Date;
         updatedAt: Date;
         tenantId: string;
-        status: import(".prisma/client").$Enums.AppointmentStatus;
         patientId: string;
         doctorId: string;
         notes: string | null;
         appointmentDate: Date;
         durationMinutes: number;
+        status: import(".prisma/client").$Enums.AppointmentStatus;
     }>;
     private validateDoctorExists;
     private validateNoOverlap;

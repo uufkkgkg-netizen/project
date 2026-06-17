@@ -32,7 +32,7 @@ export default function AdminClinicsPage() {
   const [impersonatedTenantId, setImpersonatedTenantId] = useState<string | null>(null);
 
   useEffect(() => {
-    setImpersonatedTenantId(localStorage.getItem('impersonated_tenant_id'));
+    setImpersonatedTenantId(sessionStorage.getItem('impersonated_tenant_id'));
   }, []);
 
   const fetchClinics = async () => {
@@ -68,15 +68,13 @@ export default function AdminClinicsPage() {
 
   const toggleImpersonate = (clinicId: string, clinicName: string) => {
     if (impersonatedTenantId === clinicId) {
-      localStorage.removeItem('impersonated_tenant_id');
+      sessionStorage.removeItem('impersonated_tenant_id');
       setImpersonatedTenantId(null);
       toast.success("تم إلغاء تسجيل الدخول بصلاحية العيادة", { description: "أنت الآن تعمل بصلاحيات الإدارة العامة من جديد." });
     } else {
-      localStorage.setItem('impersonated_tenant_id', clinicId);
+      sessionStorage.setItem('impersonated_tenant_id', clinicId);
       setImpersonatedTenantId(clinicId);
       toast.success(`تم تسجيل الدخول كـ ${clinicName}`, { description: "النظام بأكمله سيعمل الآن كأنك مدير هذه العيادة." });
-      // Optional: Redirect to dashboard home to immediately see the clinic's data
-      // window.location.href = '/dashboard';
     }
   };
 

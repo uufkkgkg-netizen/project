@@ -11,44 +11,48 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppController = void 0;
 const common_1 = require("@nestjs/common");
+const swagger_1 = require("@nestjs/swagger");
 const app_service_1 = require("./app.service");
 let AppController = class AppController {
     appService;
     constructor(appService) {
         this.appService = appService;
     }
-    getHello() {
-        return this.appService.getHello();
+    getRoot() {
+        return {
+            status: 'ok',
+            service: 'FemCare API',
+            version: '2.0.0',
+            timestamp: new Date().toISOString(),
+        };
     }
-    async getStatus() {
-        const { PrismaClient } = require('@prisma/client');
-        const prisma = new PrismaClient();
-        try {
-            const usersCount = await prisma.user.count();
-            return { status: 'online', usersCount, version: '1.0.2' };
-        }
-        catch (e) {
-            return { status: 'db_error', error: e.message, version: '1.0.2' };
-        }
-        finally {
-            await prisma.$disconnect();
-        }
+    getHealth() {
+        return {
+            status: 'healthy',
+            uptime: process.uptime(),
+            memory: process.memoryUsage(),
+            timestamp: new Date().toISOString(),
+            environment: process.env.NODE_ENV || 'development',
+        };
     }
 };
 exports.AppController = AppController;
 __decorate([
     (0, common_1.Get)(),
+    (0, swagger_1.ApiOperation)({ summary: 'Root health check' }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
-], AppController.prototype, "getHello", null);
+], AppController.prototype, "getRoot", null);
 __decorate([
-    (0, common_1.Get)('status'),
+    (0, common_1.Get)('health'),
+    (0, swagger_1.ApiOperation)({ summary: 'Health check endpoint for load balancers' }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Promise)
-], AppController.prototype, "getStatus", null);
+    __metadata("design:returntype", void 0)
+], AppController.prototype, "getHealth", null);
 exports.AppController = AppController = __decorate([
+    (0, swagger_1.ApiTags)('System'),
     (0, common_1.Controller)(),
     __metadata("design:paramtypes", [app_service_1.AppService])
 ], AppController);

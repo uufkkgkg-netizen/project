@@ -1,28 +1,32 @@
 import { Controller, Get } from '@nestjs/common';
+import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { AppService } from './app.service';
 
+@ApiTags('System')
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
-  getHello() {
-    return this.appService.getHello();
+  @ApiOperation({ summary: 'Root health check' })
+  getRoot() {
+    return {
+      status: 'ok',
+      service: 'FemCare API',
+      version: '2.0.0',
+      timestamp: new Date().toISOString(),
+    };
   }
 
-  @Get('status')
-  async getStatus() {
-    const { PrismaClient } = require('@prisma/client');
-    const prisma = new PrismaClient();
-    try {
-      const usersCount = await prisma.user.count();
-      return { status: 'online', usersCount, version: '1.0.2' };
-    } catch (e) {
-      return { status: 'db_error', error: e.message, version: '1.0.2' };
-    } finally {
-      await prisma.$disconnect();
-    }
+  @Get('health')
+  @ApiOperation({ summary: 'Health check endpoint for load balancers' })
+  getHealth() {
+    return {
+      status: 'healthy',
+      uptime: process.uptime(),
+      memory: process.memoryUsage(),
+      timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV || 'development',
+    };
   }
-
-
 }

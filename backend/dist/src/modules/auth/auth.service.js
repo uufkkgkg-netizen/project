@@ -56,9 +56,7 @@ let AuthService = class AuthService {
         this.jwtService = jwtService;
     }
     async login(email, pass) {
-        const user = await this.prisma.user.findUnique({
-            where: { email },
-        });
+        const user = await this.prisma.user.findUnique({ where: { email } });
         if (!user || !user.isActive) {
             throw new common_1.UnauthorizedException('Invalid credentials');
         }
@@ -68,7 +66,7 @@ let AuthService = class AuthService {
         }
         await this.prisma.user.update({
             where: { id: user.id },
-            data: { lastLogin: new Date() }
+            data: { lastLogin: new Date() },
         });
         const isSuperAdmin = user.role === client_1.UserRole.SUPER_ADMIN;
         const payload = {
@@ -76,23 +74,40 @@ let AuthService = class AuthService {
             email: user.email,
             tenantId: user.tenantId,
             role: user.role,
-            isSuperAdmin
+            isSuperAdmin,
         };
+        const access_token = await this.jwtService.signAsync(payload);
         return {
-            access_token: await this.jwtService.signAsync(payload),
-            user: {
-                id: user.id,
-                firstName: user.firstName,
-                lastName: user.lastName,
-                email: user.email,
-                tenantId: user.tenantId,
-                avatarUrl: user.avatarUrl,
-                role: user.role
-            }
+            access_token,
+            user: this.sanitizeUser(user),
+        };
+    }
+    async getMe(userId) {
+        const user = await this.prisma.user.findUnique({
+            where: { id: userId },
+            include: {
+                tenant: {
+                    select: {
+                        id: true,
+                        name: true,
+                        logoUrl: true,
+                        defaultCurrency: true,
+                        subscriptionStatus: true,
+                        subscriptionPlan: true,
+                    },
+                },
+            },
+        });
+        if (!user || !user.isActive) {
+            throw new common_1.UnauthorizedException('User not found or inactive');
+        }
+        return {
+            ...this.sanitizeUser(user),
+            tenant: user.tenant,
         };
     }
     async registerTenant(dto) {
-        const salt = await bcrypt.genSalt();
+        const salt = await bcrypt.genSalt(12);
         const passwordHash = await bcrypt.hash(dto.password, salt);
         return this.prisma.$transaction(async (tx) => {
             const tenant = await tx.tenant.create({
@@ -100,9 +115,9 @@ let AuthService = class AuthService {
                     name: dto.clinicName,
                     subdomain: dto.subdomain,
                     contactEmail: dto.email,
-                }
+                },
             });
-            const user = await tx.user.create({
+            await tx.user.create({
                 data: {
                     tenantId: tenant.id,
                     role: client_1.UserRole.TENANT_ADMIN,
@@ -110,10 +125,22 @@ let AuthService = class AuthService {
                     lastName: dto.lastName,
                     email: dto.email,
                     passwordHash,
-                }
+                },
             });
             return { message: 'Tenant successfully registered', tenantId: tenant.id };
         });
+    }
+    sanitizeUser(user) {
+        return {
+            id: user.id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            tenantId: user.tenantId,
+            avatarUrl: user.avatarUrl,
+            role: user.role,
+            isSuperAdmin: user.role === client_1.UserRole.SUPER_ADMIN,
+        };
     }
 };
 exports.AuthService = AuthService;

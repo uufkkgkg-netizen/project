@@ -9,12 +9,12 @@ export declare class AppointmentsController {
         createdAt: Date;
         updatedAt: Date;
         tenantId: string;
-        status: import(".prisma/client").$Enums.AppointmentStatus;
         patientId: string;
         doctorId: string;
         notes: string | null;
         appointmentDate: Date;
         durationMinutes: number;
+        status: import(".prisma/client").$Enums.AppointmentStatus;
     }>;
     findAll(req: any): Promise<({
         patient: {
@@ -33,12 +33,12 @@ export declare class AppointmentsController {
         createdAt: Date;
         updatedAt: Date;
         tenantId: string;
-        status: import(".prisma/client").$Enums.AppointmentStatus;
         patientId: string;
         doctorId: string;
         notes: string | null;
         appointmentDate: Date;
         durationMinutes: number;
+        status: import(".prisma/client").$Enums.AppointmentStatus;
     })[]>;
     findOne(id: string, req: any): Promise<{
         patient: {
@@ -57,35 +57,35 @@ export declare class AppointmentsController {
         createdAt: Date;
         updatedAt: Date;
         tenantId: string;
-        status: import(".prisma/client").$Enums.AppointmentStatus;
         patientId: string;
         doctorId: string;
         notes: string | null;
         appointmentDate: Date;
         durationMinutes: number;
+        status: import(".prisma/client").$Enums.AppointmentStatus;
     }>;
     update(id: string, updateAppointmentDto: UpdateAppointmentDto, req: any): Promise<{
         id: string;
         createdAt: Date;
         updatedAt: Date;
         tenantId: string;
-        status: import(".prisma/client").$Enums.AppointmentStatus;
         patientId: string;
         doctorId: string;
         notes: string | null;
         appointmentDate: Date;
         durationMinutes: number;
+        status: import(".prisma/client").$Enums.AppointmentStatus;
     }>;
     remove(id: string, req: any): Promise<{
         id: string;
         createdAt: Date;
         updatedAt: Date;
         tenantId: string;
-        status: import(".prisma/client").$Enums.AppointmentStatus;
         patientId: string;
         doctorId: string;
         notes: string | null;
         appointmentDate: Date;
         durationMinutes: number;
+        status: import(".prisma/client").$Enums.AppointmentStatus;
     }>;
 }

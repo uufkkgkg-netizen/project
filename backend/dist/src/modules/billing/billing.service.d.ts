@@ -25,18 +25,18 @@ export declare class BillingService {
         items: {
             id: string;
             createdAt: Date;
+            description: string;
             invoiceId: string;
             amount: import("@prisma/client/runtime/library").Decimal;
-            description: string;
         }[];
     } & {
         id: string;
         createdAt: Date;
         updatedAt: Date;
         tenantId: string;
-        status: import(".prisma/client").$Enums.InvoiceStatus;
         patientId: string;
         notes: string | null;
+        status: import(".prisma/client").$Enums.InvoiceStatus;
         appointmentId: string | null;
         medicalRecordId: string | null;
         totalAmount: import("@prisma/client/runtime/library").Decimal;
@@ -64,18 +64,18 @@ export declare class BillingService {
         items: {
             id: string;
             createdAt: Date;
+            description: string;
             invoiceId: string;
             amount: import("@prisma/client/runtime/library").Decimal;
-            description: string;
         }[];
     } & {
         id: string;
         createdAt: Date;
         updatedAt: Date;
         tenantId: string;
-        status: import(".prisma/client").$Enums.InvoiceStatus;
         patientId: string;
         notes: string | null;
+        status: import(".prisma/client").$Enums.InvoiceStatus;
         appointmentId: string | null;
         medicalRecordId: string | null;
         totalAmount: import("@prisma/client/runtime/library").Decimal;
@@ -108,18 +108,18 @@ export declare class BillingService {
         items: {
             id: string;
             createdAt: Date;
+            description: string;
             invoiceId: string;
             amount: import("@prisma/client/runtime/library").Decimal;
-            description: string;
         }[];
     } & {
         id: string;
         createdAt: Date;
         updatedAt: Date;
         tenantId: string;
-        status: import(".prisma/client").$Enums.InvoiceStatus;
         patientId: string;
         notes: string | null;
+        status: import(".prisma/client").$Enums.InvoiceStatus;
         appointmentId: string | null;
         medicalRecordId: string | null;
         totalAmount: import("@prisma/client/runtime/library").Decimal;
@@ -142,18 +142,18 @@ export declare class BillingService {
         items: {
             id: string;
             createdAt: Date;
+            description: string;
             invoiceId: string;
             amount: import("@prisma/client/runtime/library").Decimal;
-            description: string;
         }[];
     } & {
         id: string;
         createdAt: Date;
         updatedAt: Date;
         tenantId: string;
-        status: import(".prisma/client").$Enums.InvoiceStatus;
         patientId: string;
         notes: string | null;
+        status: import(".prisma/client").$Enums.InvoiceStatus;
         appointmentId: string | null;
         medicalRecordId: string | null;
         totalAmount: import("@prisma/client/runtime/library").Decimal;
@@ -182,18 +182,18 @@ export declare class BillingService {
         items: {
             id: string;
             createdAt: Date;
+            description: string;
             invoiceId: string;
             amount: import("@prisma/client/runtime/library").Decimal;
-            description: string;
         }[];
     } & {
         id: string;
         createdAt: Date;
         updatedAt: Date;
         tenantId: string;
-        status: import(".prisma/client").$Enums.InvoiceStatus;
         patientId: string;
         notes: string | null;
+        status: import(".prisma/client").$Enums.InvoiceStatus;
         appointmentId: string | null;
         medicalRecordId: string | null;
         totalAmount: import("@prisma/client/runtime/library").Decimal;
@@ -207,9 +207,9 @@ export declare class BillingService {
         createdAt: Date;
         updatedAt: Date;
         tenantId: string;
-        status: import(".prisma/client").$Enums.InvoiceStatus;
         patientId: string;
         notes: string | null;
+        status: import(".prisma/client").$Enums.InvoiceStatus;
         appointmentId: string | null;
         medicalRecordId: string | null;
         totalAmount: import("@prisma/client/runtime/library").Decimal;

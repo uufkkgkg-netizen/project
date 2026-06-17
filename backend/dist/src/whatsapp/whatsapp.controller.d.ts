@@ -7,8 +7,8 @@ export declare class WhatsappController {
         createdAt: Date;
         updatedAt: Date;
         tenantId: string;
-        status: import(".prisma/client").$Enums.WhatsappStatus;
         appointmentDate: Date;
+        status: import(".prisma/client").$Enums.WhatsappStatus;
         patientName: string;
         patientPhone: string;
         errorMessage: string | null;
