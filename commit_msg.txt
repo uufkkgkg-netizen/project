@@ -1,1 +1,1 @@
-fix: secure auth HttpOnly cookie, OB-GYN patient schema, resolve records 404
+fix: CORS cross-origin, sameSite=none for Render, memory token store, stable JWT_SECRET

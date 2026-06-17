@@ -7,11 +7,15 @@ import { RegisterDto } from './dto/register.dto';
 import { JwtAuthGuard } from '../../core/auth/guards/jwt-auth.guard';
 import type { Response, Request } from 'express';
 
+const isProduction = process.env.NODE_ENV === 'production';
+
+// sameSite:'none' + secure:true required for cross-origin cookies (different Render subdomains)
+// sameSite:'lax' for development (localhost)
 const COOKIE_OPTIONS = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === 'production',
-  sameSite: 'lax' as const,
-  maxAge: 24 * 60 * 60 * 1000, // 24 hours
+  secure: isProduction,                               // HTTPS only in production
+  sameSite: (isProduction ? 'none' : 'lax') as 'none' | 'lax', // cross-origin on Render
+  maxAge: 24 * 60 * 60 * 1000,                       // 24 hours
   path: '/',
 };
 

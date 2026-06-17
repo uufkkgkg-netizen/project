@@ -7,6 +7,7 @@ services:
     plan: free
     region: frankfurt
     branch: main
+    healthCheckPath: /health
     envVars:
       - key: NODE_ENV
         value: production
@@ -16,8 +17,12 @@ services:
         fromDatabase:
           name: femcare-prod-db
           property: connectionString
+      # IMPORTANT: Set JWT_SECRET manually in Render Dashboard > Environment
+      # Use a strong random value: openssl rand -base64 64
       - key: JWT_SECRET
-        generateValue: true
+        sync: false  # Must be set manually — do NOT use generateValue (changes on each deploy)
+      - key: FRONTEND_URL
+        value: https://femcare-frontend-app.onrender.com
 
   - type: web
     name: femcare-frontend-app

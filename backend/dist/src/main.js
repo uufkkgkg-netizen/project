@@ -23,6 +23,7 @@ async function bootstrap() {
         'http://localhost:3000',
         'http://localhost:3001',
         process.env.FRONTEND_URL,
+        'https://femcare-frontend-app.onrender.com',
         'https://femcare-frontend.onrender.com',
         'https://femcare-clinic.vercel.app',
     ].filter(Boolean);
@@ -35,10 +36,12 @@ async function bootstrap() {
             if (process.env.NODE_ENV !== 'production' && origin.includes('localhost')) {
                 return callback(null, true);
             }
+            if (origin.endsWith('.onrender.com'))
+                return callback(null, true);
             callback(new Error(`CORS: Origin ${origin} not allowed`));
         },
         methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-        allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'x-tenant-id'],
+        allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'x-tenant-id', 'x-csrf-token'],
         credentials: true,
     });
     app.setGlobalPrefix('api', { exclude: ['/', '/health'] });

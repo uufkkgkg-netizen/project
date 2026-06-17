@@ -14,7 +14,7 @@ import {
   Form, FormControl, FormField, FormItem, FormLabel, FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import api from "@/lib/api";
+import api, { tokenStore } from "@/lib/api";
 
 const loginSchema = z.object({
   email: z.string().email("البريد الإلكتروني غير صالح"),
@@ -35,9 +35,12 @@ export default function LoginPage() {
   async function onSubmit(data: LoginFormValues) {
     setIsLoading(true);
     try {
-      // Backend sets HttpOnly cookie automatically on successful login.
-      // We do NOT store the token anywhere on the client side.
-      await api.post("/auth/login", data);
+      // Backend sets HttpOnly cookie automatically.
+      // Also store token in memory for cross-origin Bearer auth fallback.
+      const result = await api.post("/auth/login", data);
+      if (result.data?.access_token) {
+        tokenStore.set(result.data.access_token);
+      }
 
       toast.success("تم تسجيل الدخول بنجاح 🌸", {
         description: "جاري تحويلك إلى لوحة التحكم...",

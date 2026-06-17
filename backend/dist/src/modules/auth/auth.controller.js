@@ -20,10 +20,11 @@ const auth_service_1 = require("./auth.service");
 const login_dto_1 = require("./dto/login.dto");
 const register_dto_1 = require("./dto/register.dto");
 const jwt_auth_guard_1 = require("../../core/auth/guards/jwt-auth.guard");
+const isProduction = process.env.NODE_ENV === 'production';
 const COOKIE_OPTIONS = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    secure: isProduction,
+    sameSite: (isProduction ? 'none' : 'lax'),
     maxAge: 24 * 60 * 60 * 1000,
     path: '/',
 };
