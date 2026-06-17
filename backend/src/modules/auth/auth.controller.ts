@@ -56,7 +56,6 @@ export class AuthController {
     res.cookie('csrf_token', result.csrfToken, CSRF_COOKIE_OPTIONS);
 
     return {
-      access_token: result.access_token,
       csrf_token: result.csrfToken,
       user: result.user,
     };
@@ -82,7 +81,6 @@ export class AuthController {
     res.cookie('csrf_token', result.csrfToken, CSRF_COOKIE_OPTIONS);
 
     return {
-      access_token: result.access_token,
       csrf_token: result.csrfToken,
       user: result.user,
     };
@@ -108,6 +106,21 @@ export class AuthController {
     res.clearCookie('csrf_token', { path: '/' });
 
     return { message: 'Logged out successfully' };
+  }
+
+  @Post('logout-all')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Logout from all devices' })
+  async logoutAll(@Req() req: Request & { user: any }, @Res({ passthrough: true }) res: Response) {
+    await this.authService.logoutAll(req.user.userId);
+
+    res.clearCookie('access_token', { path: '/' });
+    res.clearCookie('refresh_token', { path: '/' });
+    res.clearCookie('csrf_token', { path: '/' });
+
+    return { message: 'Logged out from all devices successfully' };
   }
 
   @Post('register')

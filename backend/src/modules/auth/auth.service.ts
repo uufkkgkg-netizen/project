@@ -118,6 +118,14 @@ export class AuthService {
     return { message: 'Logged out successfully' };
   }
 
+  async logoutAll(userId: string) {
+    await this.prisma.session.updateMany({
+      where: { userId },
+      data: { isRevoked: true },
+    });
+    return { message: 'Logged out from all devices' };
+  }
+
   async getMe(userId: string) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },

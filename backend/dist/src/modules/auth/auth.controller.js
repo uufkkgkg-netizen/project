@@ -52,7 +52,6 @@ let AuthController = class AuthController {
         res.cookie('refresh_token', result.refreshToken, REFRESH_COOKIE_OPTIONS);
         res.cookie('csrf_token', result.csrfToken, CSRF_COOKIE_OPTIONS);
         return {
-            access_token: result.access_token,
             csrf_token: result.csrfToken,
             user: result.user,
         };
@@ -68,7 +67,6 @@ let AuthController = class AuthController {
         res.cookie('refresh_token', result.refreshToken, REFRESH_COOKIE_OPTIONS);
         res.cookie('csrf_token', result.csrfToken, CSRF_COOKIE_OPTIONS);
         return {
-            access_token: result.access_token,
             csrf_token: result.csrfToken,
             user: result.user,
         };
@@ -84,8 +82,18 @@ let AuthController = class AuthController {
         res.clearCookie('csrf_token', { path: '/' });
         return { message: 'Logged out successfully' };
     }
+    async logoutAll(req, res) {
+        await this.authService.logoutAll(req.user.userId);
+        res.clearCookie('access_token', { path: '/' });
+        res.clearCookie('refresh_token', { path: '/' });
+        res.clearCookie('csrf_token', { path: '/' });
+        return { message: 'Logged out from all devices successfully' };
+    }
     async register(registerDto) {
         return this.authService.registerTenant(registerDto);
+    }
+    async seedProductionDb() {
+        return this.authService.seedDatabase();
     }
 };
 exports.AuthController = AuthController;
@@ -132,6 +140,18 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "logout", null);
 __decorate([
+    (0, common_1.Post)('logout-all'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    (0, swagger_1.ApiOperation)({ summary: 'Logout from all devices' }),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Res)({ passthrough: true })),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "logoutAll", null);
+__decorate([
     (0, common_1.Post)('register'),
     (0, throttler_1.Throttle)({ auth: { ttl: 60000, limit: 5 } }),
     (0, swagger_1.ApiOperation)({ summary: 'Register a new clinic' }),
@@ -140,6 +160,13 @@ __decorate([
     __metadata("design:paramtypes", [register_dto_1.RegisterDto]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "register", null);
+__decorate([
+    (0, common_1.Get)('seed'),
+    (0, swagger_1.ApiOperation)({ summary: 'Temporary endpoint to seed the production database' }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "seedProductionDb", null);
 exports.AuthController = AuthController = __decorate([
     (0, swagger_1.ApiTags)('Authentication'),
     (0, common_1.Controller)('auth'),

@@ -1,0 +1,3 @@
+fix(auth): P0 security updates, fix Render proxy issues, and enhance error handling  
+- Added trust proxy, Sentry, and removed JWT fallback  
+- Removed token from JSON response 

@@ -21,8 +21,13 @@ exports.AuthModule = AuthModule = __decorate([
         imports: [
             passport_1.PassportModule,
             jwt_1.JwtModule.register({
-                secret: process.env.JWT_SECRET || 'super_secret_key',
-                signOptions: { expiresIn: '1d' },
+                secret: (() => {
+                    if (!process.env.JWT_SECRET && process.env.NODE_ENV === 'production') {
+                        throw new Error('FATAL: JWT_SECRET environment variable is missing. The application will not start securely.');
+                    }
+                    return process.env.JWT_SECRET || 'dev_secret_fallback_only';
+                })(),
+                signOptions: { expiresIn: '15m' },
             }),
         ],
         controllers: [auth_controller_1.AuthController],

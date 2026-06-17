@@ -10,6 +10,7 @@ import { PrismaClient, UserRole } from '@prisma/client';
 import { Pool } from 'pg';
 import { PrismaPg } from '@prisma/adapter-pg';
 import * as bcrypt from 'bcryptjs';
+import * as crypto from 'crypto';
 
 // Load .env (needed when running seed script directly outside NestJS DI)
 import * as dotenv from 'dotenv';
@@ -19,20 +20,9 @@ const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter } as any);
 
-const SUPER_ADMINS = [
-  {
-    firstName:  'Super',
-    lastName:   'Admin',
-    email:      'admin@gmail.com',
-    password:   '123456',
-  },
-  {
-    firstName:  'Super',
-    lastName:   'Admin 2',
-    email:      'admahn@gmail.com',
-    password:   '123456',
-  },
-];
+function generateSecurePassword() {
+  return crypto.randomBytes(12).toString('base64').replace(/\W/g, '') + 'A1!';
+}
 
 async function main() {
   console.log('🌱  FemCare Seeder started…\n');
@@ -51,28 +41,30 @@ async function main() {
   console.log(`   ✅  Tenant: ${tenant.name}`);
 
   // ── 2. Seed Super Admin users ─────────────────────────────────
-  console.log('\n▶  Seeding Super Admin accounts…');
-  for (const admin of SUPER_ADMINS) {
-    const passwordHash = await bcrypt.hash(admin.password, 12);
-    const user = await prisma.user.upsert({
-      where:  { email: admin.email },
-      create: {
-        firstName:    admin.firstName,
-        lastName:     admin.lastName,
-        email:        admin.email,
-        passwordHash,
-        role:         UserRole.SUPER_ADMIN,
-        tenantId:     tenant.id,   // Assign to default tenant
-        isActive:     true,
-      },
-      update: { firstName: admin.firstName, lastName: admin.lastName, tenantId: tenant.id, role: UserRole.SUPER_ADMIN },
-    });
-    console.log(`   ✅  Super Admin: ${user.firstName} ${user.lastName} <${user.email}>`);
-  }
+  console.log('\n▶  Seeding Super Admin account…');
+  const superAdminPassword = generateSecurePassword();
+  const superAdminHash = await bcrypt.hash(superAdminPassword, 12);
+  const user = await prisma.user.upsert({
+    where:  { email: 'admin@gmail.com' },
+    create: {
+      firstName:    'Super',
+      lastName:     'Admin',
+      email:        'admin@gmail.com',
+      passwordHash: superAdminHash,
+      role:         UserRole.SUPER_ADMIN,
+      tenantId:     tenant.id,
+      isActive:     true,
+    },
+    update: { firstName: 'Super', lastName: 'Admin', tenantId: tenant.id, role: UserRole.SUPER_ADMIN },
+  });
+  console.log(`   ✅  Super Admin: ${user.firstName} ${user.lastName} <${user.email}>`);
+  console.log(`   🔑  PASSWORD: ${superAdminPassword}`);
+  console.log(`   ⚠️  Please save this password NOW. It will not be printed again.`);
 
   // ── 3. Seed Tenant Admin ──────────────────────────────────────
   console.log('\n▶  Seeding Tenant Admin account…');
-  const taPasswordHash = await bcrypt.hash('123456', 12);
+  const taPassword = generateSecurePassword();
+  const taPasswordHash = await bcrypt.hash(taPassword, 12);
   const taUser = await prisma.user.upsert({
     where:  { email: 'clinic@gmail.com' },
     create: {
@@ -87,10 +79,12 @@ async function main() {
     update: { tenantId: tenant.id, role: UserRole.TENANT_ADMIN },
   });
   console.log(`   ✅  Tenant Admin: ${taUser.firstName} ${taUser.lastName} <${taUser.email}>`);
+  console.log(`   🔑  PASSWORD: ${taPassword}`);
 
   // ── 4. Seed Doctor ──────────────────────────────────────
   console.log('\n▶  Seeding Doctor account…');
-  const docPasswordHash = await bcrypt.hash('123456', 12);
+  const docPassword = generateSecurePassword();
+  const docPasswordHash = await bcrypt.hash(docPassword, 12);
   const docUser = await prisma.user.upsert({
     where:  { email: 'doctor@gmail.com' },
     create: {
@@ -105,6 +99,7 @@ async function main() {
     update: { tenantId: tenant.id, role: UserRole.DOCTOR },
   });
   console.log(`   ✅  Doctor: ${docUser.firstName} ${docUser.lastName} <${docUser.email}>`);
+  console.log(`   🔑  PASSWORD: ${docPassword}`);
 
   console.log('\n✨  Seeding complete!');
 }

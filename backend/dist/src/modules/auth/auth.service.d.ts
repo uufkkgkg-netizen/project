@@ -38,6 +38,9 @@ export declare class AuthService {
     logout(refreshTokenString?: string): Promise<{
         message: string;
     }>;
+    logoutAll(userId: string): Promise<{
+        message: string;
+    }>;
     getMe(userId: string): Promise<{
         tenant: any;
         id: any;
@@ -54,4 +57,7 @@ export declare class AuthService {
         tenantId: string;
     }>;
     private sanitizeUser;
+    seedDatabase(): Promise<{
+        message: string;
+    }>;
 }

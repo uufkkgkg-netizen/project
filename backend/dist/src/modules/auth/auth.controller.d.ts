@@ -6,7 +6,6 @@ export declare class AuthController {
     private readonly authService;
     constructor(authService: AuthService);
     login(loginDto: LoginDto, req: Request, res: Response): Promise<{
-        access_token: string;
         csrf_token: string;
         user: {
             id: any;
@@ -20,7 +19,6 @@ export declare class AuthController {
         };
     }>;
     refresh(req: Request, res: Response): Promise<{
-        access_token: string;
         csrf_token: string;
         user: {
             id: any;
@@ -49,8 +47,16 @@ export declare class AuthController {
     logout(req: Request, res: Response): Promise<{
         message: string;
     }>;
+    logoutAll(req: Request & {
+        user: any;
+    }, res: Response): Promise<{
+        message: string;
+    }>;
     register(registerDto: RegisterDto): Promise<{
         message: string;
         tenantId: string;
+    }>;
+    seedProductionDb(): Promise<{
+        message: string;
     }>;
 }

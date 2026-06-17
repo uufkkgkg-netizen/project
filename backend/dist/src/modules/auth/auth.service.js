@@ -141,6 +141,13 @@ let AuthService = class AuthService {
         }
         return { message: 'Logged out successfully' };
     }
+    async logoutAll(userId) {
+        await this.prisma.session.updateMany({
+            where: { userId },
+            data: { isRevoked: true },
+        });
+        return { message: 'Logged out from all devices' };
+    }
     async getMe(userId) {
         const user = await this.prisma.user.findUnique({
             where: { id: userId },
@@ -204,6 +211,38 @@ let AuthService = class AuthService {
             role: user.role,
             isSuperAdmin: user.role === client_1.UserRole.SUPER_ADMIN,
         };
+    }
+    async seedDatabase() {
+        const adminExists = await this.prisma.user.findUnique({ where: { email: 'admin@gmail.com' } });
+        if (adminExists)
+            return { message: 'Database already seeded' };
+        const salt = await bcrypt.genSalt(12);
+        const passwordHash = await bcrypt.hash('123456', salt);
+        return this.prisma.$transaction(async (tx) => {
+            const tenant = await tx.tenant.create({
+                data: { name: 'FemCare Clinic Main', subdomain: 'main', isActive: true },
+            });
+            await tx.tenantSettings.create({ data: { tenantId: tenant.id } });
+            await tx.user.create({
+                data: {
+                    firstName: 'Super', lastName: 'Admin', email: 'admin@gmail.com',
+                    passwordHash, role: client_1.UserRole.SUPER_ADMIN, tenantId: tenant.id, isActive: true,
+                },
+            });
+            await tx.user.create({
+                data: {
+                    firstName: 'Clinic', lastName: 'Admin', email: 'clinic@gmail.com',
+                    passwordHash, role: client_1.UserRole.TENANT_ADMIN, tenantId: tenant.id, isActive: true,
+                },
+            });
+            await tx.user.create({
+                data: {
+                    firstName: 'Doctor', lastName: 'Ahmad', email: 'doctor@gmail.com',
+                    passwordHash, role: client_1.UserRole.DOCTOR, tenantId: tenant.id, isActive: true,
+                },
+            });
+            return { message: 'Successfully seeded production database!' };
+        });
     }
 };
 exports.AuthService = AuthService;

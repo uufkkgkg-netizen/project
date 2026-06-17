@@ -36,10 +36,10 @@ export default function LoginPage() {
     setIsLoading(true);
     try {
       // Backend sets HttpOnly cookie automatically.
-      // Also store token in memory for cross-origin Bearer auth fallback.
+      // Also store CSRF token in memory for headers.
       const result = await api.post("/auth/login", data);
-      if (result.data?.access_token) {
-        tokenStore.set(result.data.access_token, result.data.csrf_token);
+      if (result.data?.csrf_token) {
+        tokenStore.set(result.data.csrf_token);
       }
 
       toast.success("تم تسجيل الدخول بنجاح 🌸", {
@@ -48,16 +48,9 @@ export default function LoginPage() {
 
       router.push("/dashboard");
     } catch (error: any) {
-      const status = error.response?.status;
-      if (status === 429) {
-        toast.error("محاولات كثيرة جداً", {
-          description: "تجاوزت الحد المسموح به. يرجى الانتظار دقيقة واحدة.",
-        });
-      } else {
-        toast.error("فشل تسجيل الدخول", {
-          description: error.response?.data?.message || "البريد الإلكتروني أو كلمة المرور غير صحيحة.",
-        });
-      }
+      toast.error("فشل تسجيل الدخول", {
+        description: error.userMessage || error.response?.data?.message || "حدث خطأ غير متوقع",
+      });
     } finally {
       setIsLoading(false);
     }

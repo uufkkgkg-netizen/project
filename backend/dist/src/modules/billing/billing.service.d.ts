@@ -25,9 +25,9 @@ export declare class BillingService {
         items: {
             id: string;
             createdAt: Date;
-            description: string;
             invoiceId: string;
             amount: import("@prisma/client/runtime/library").Decimal;
+            description: string;
         }[];
     } & {
         id: string;
@@ -64,9 +64,9 @@ export declare class BillingService {
         items: {
             id: string;
             createdAt: Date;
-            description: string;
             invoiceId: string;
             amount: import("@prisma/client/runtime/library").Decimal;
+            description: string;
         }[];
     } & {
         id: string;
@@ -108,9 +108,9 @@ export declare class BillingService {
         items: {
             id: string;
             createdAt: Date;
-            description: string;
             invoiceId: string;
             amount: import("@prisma/client/runtime/library").Decimal;
+            description: string;
         }[];
     } & {
         id: string;
@@ -142,9 +142,9 @@ export declare class BillingService {
         items: {
             id: string;
             createdAt: Date;
-            description: string;
             invoiceId: string;
             amount: import("@prisma/client/runtime/library").Decimal;
+            description: string;
         }[];
     } & {
         id: string;
@@ -182,9 +182,9 @@ export declare class BillingService {
         items: {
             id: string;
             createdAt: Date;
-            description: string;
             invoiceId: string;
             amount: import("@prisma/client/runtime/library").Decimal;
+            description: string;
         }[];
     } & {
         id: string;

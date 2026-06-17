@@ -39,5 +39,5 @@ EXPOSE 10000
 ENV NODE_ENV=production
 ENV PORT=10000
 
-# التشغيل مع التأكد من إعداد قاعدة البيانات
-CMD ["sh", "-c", "npx prisma db push --accept-data-loss --skip-generate && node dist/src/main.js"]
+# التشغيل مع التأكد من تشغيل الترحيلات (Migrations)
+CMD ["sh", "-c", "npx prisma migrate deploy && node dist/src/main.js"]

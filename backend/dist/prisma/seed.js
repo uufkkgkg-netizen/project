@@ -37,25 +37,15 @@ const client_1 = require("@prisma/client");
 const pg_1 = require("pg");
 const adapter_pg_1 = require("@prisma/adapter-pg");
 const bcrypt = __importStar(require("bcryptjs"));
+const crypto = __importStar(require("crypto"));
 const dotenv = __importStar(require("dotenv"));
 dotenv.config();
 const pool = new pg_1.Pool({ connectionString: process.env.DATABASE_URL });
 const adapter = new adapter_pg_1.PrismaPg(pool);
 const prisma = new client_1.PrismaClient({ adapter });
-const SUPER_ADMINS = [
-    {
-        firstName: 'Super',
-        lastName: 'Admin',
-        email: 'admin@gmail.com',
-        password: '123456',
-    },
-    {
-        firstName: 'Super',
-        lastName: 'Admin 2',
-        email: 'admahn@gmail.com',
-        password: '123456',
-    },
-];
+function generateSecurePassword() {
+    return crypto.randomBytes(12).toString('base64').replace(/\W/g, '') + 'A1!';
+}
 async function main() {
     console.log('🌱  FemCare Seeder started…\n');
     console.log('\n▶  Seeding Default Tenant…');
@@ -69,26 +59,28 @@ async function main() {
         update: {},
     });
     console.log(`   ✅  Tenant: ${tenant.name}`);
-    console.log('\n▶  Seeding Super Admin accounts…');
-    for (const admin of SUPER_ADMINS) {
-        const passwordHash = await bcrypt.hash(admin.password, 12);
-        const user = await prisma.user.upsert({
-            where: { email: admin.email },
-            create: {
-                firstName: admin.firstName,
-                lastName: admin.lastName,
-                email: admin.email,
-                passwordHash,
-                role: client_1.UserRole.SUPER_ADMIN,
-                tenantId: tenant.id,
-                isActive: true,
-            },
-            update: { firstName: admin.firstName, lastName: admin.lastName, tenantId: tenant.id, role: client_1.UserRole.SUPER_ADMIN },
-        });
-        console.log(`   ✅  Super Admin: ${user.firstName} ${user.lastName} <${user.email}>`);
-    }
+    console.log('\n▶  Seeding Super Admin account…');
+    const superAdminPassword = generateSecurePassword();
+    const superAdminHash = await bcrypt.hash(superAdminPassword, 12);
+    const user = await prisma.user.upsert({
+        where: { email: 'admin@gmail.com' },
+        create: {
+            firstName: 'Super',
+            lastName: 'Admin',
+            email: 'admin@gmail.com',
+            passwordHash: superAdminHash,
+            role: client_1.UserRole.SUPER_ADMIN,
+            tenantId: tenant.id,
+            isActive: true,
+        },
+        update: { firstName: 'Super', lastName: 'Admin', tenantId: tenant.id, role: client_1.UserRole.SUPER_ADMIN },
+    });
+    console.log(`   ✅  Super Admin: ${user.firstName} ${user.lastName} <${user.email}>`);
+    console.log(`   🔑  PASSWORD: ${superAdminPassword}`);
+    console.log(`   ⚠️  Please save this password NOW. It will not be printed again.`);
     console.log('\n▶  Seeding Tenant Admin account…');
-    const taPasswordHash = await bcrypt.hash('123456', 12);
+    const taPassword = generateSecurePassword();
+    const taPasswordHash = await bcrypt.hash(taPassword, 12);
     const taUser = await prisma.user.upsert({
         where: { email: 'clinic@gmail.com' },
         create: {
@@ -103,8 +95,10 @@ async function main() {
         update: { tenantId: tenant.id, role: client_1.UserRole.TENANT_ADMIN },
     });
     console.log(`   ✅  Tenant Admin: ${taUser.firstName} ${taUser.lastName} <${taUser.email}>`);
+    console.log(`   🔑  PASSWORD: ${taPassword}`);
     console.log('\n▶  Seeding Doctor account…');
-    const docPasswordHash = await bcrypt.hash('123456', 12);
+    const docPassword = generateSecurePassword();
+    const docPasswordHash = await bcrypt.hash(docPassword, 12);
     const docUser = await prisma.user.upsert({
         where: { email: 'doctor@gmail.com' },
         create: {
@@ -119,6 +113,7 @@ async function main() {
         update: { tenantId: tenant.id, role: client_1.UserRole.DOCTOR },
     });
     console.log(`   ✅  Doctor: ${docUser.firstName} ${docUser.lastName} <${docUser.email}>`);
+    console.log(`   🔑  PASSWORD: ${docPassword}`);
     console.log('\n✨  Seeding complete!');
 }
 main()
