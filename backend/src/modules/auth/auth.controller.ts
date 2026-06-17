@@ -116,4 +116,11 @@ export class AuthController {
   async register(@Body() registerDto: RegisterDto) {
     return this.authService.registerTenant(registerDto);
   }
+
+  // ── Temporary Seed Endpoint for Production ──────────────────────────────
+  @Get('seed')
+  @ApiOperation({ summary: 'Temporary endpoint to seed the production database' })
+  async seedProductionDb() {
+    return this.authService.seedDatabase();
+  }
 }
