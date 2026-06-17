@@ -23,8 +23,23 @@ let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
     }
-    async login(loginDto) {
-        return this.authService.login(loginDto.email, loginDto.password);
+    async login(loginDto, res) {
+        const result = await this.authService.login(loginDto.email, loginDto.password);
+        res.cookie('access_token', result.access_token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            maxAge: 24 * 60 * 60 * 1000,
+            path: '/',
+        });
+        return {
+            access_token: result.access_token,
+            user: result.user,
+        };
+    }
+    async logout(res) {
+        res.clearCookie('access_token', { path: '/' });
+        return { message: 'Logged out successfully' };
     }
     async register(registerDto) {
         return this.authService.registerTenant(registerDto);
@@ -34,14 +49,24 @@ exports.AuthController = AuthController;
 __decorate([
     (0, common_1.Post)('login'),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
-    (0, swagger_1.ApiOperation)({ summary: 'User login' }),
-    (0, swagger_1.ApiResponse)({ status: 200, description: 'Return JWT token and user info.' }),
+    (0, swagger_1.ApiOperation)({ summary: 'User login — sets HttpOnly cookie and returns token' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Return JWT token, user info, and set HttpOnly cookie.' }),
     (0, swagger_1.ApiResponse)({ status: 401, description: 'Invalid credentials.' }),
     __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Res)({ passthrough: true })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [login_dto_1.LoginDto]),
+    __metadata("design:paramtypes", [login_dto_1.LoginDto, Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "login", null);
+__decorate([
+    (0, common_1.Post)('logout'),
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    (0, swagger_1.ApiOperation)({ summary: 'Clear auth cookie to log out' }),
+    __param(0, (0, common_1.Res)({ passthrough: true })),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "logout", null);
 __decorate([
     (0, common_1.Post)('register'),
     (0, swagger_1.ApiOperation)({ summary: 'Register a new Tenant (Clinic)' }),

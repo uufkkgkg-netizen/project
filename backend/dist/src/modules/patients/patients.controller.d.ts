@@ -10,4 +10,10 @@ export declare class PatientsController {
     findOne(id: string): Promise<any>;
     update(id: string, updatePatientDto: UpdatePatientDto): Promise<any>;
     createVisit(id: string, createVisitDto: CreateVisitDto): Promise<any>;
+    findAllVisits(search?: string, page?: string, limit?: string): Promise<{
+        data: any;
+        total: any;
+        page: number;
+        limit: number;
+    }>;
 }

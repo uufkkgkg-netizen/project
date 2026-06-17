@@ -6,4 +6,15 @@ export declare class CreatePatientDto {
     medicalNotes?: string;
     allergies?: string;
     medicalHistory?: string;
+    gravida?: number;
+    para?: number;
+    abortus?: number;
+    livingChildren?: number;
+    lastMenstrualPeriod?: string;
+    estimatedDueDate?: string;
+    gestationalAge?: string;
+    contraceptiveMethod?: string;
+    previousSurgeries?: string;
+    chronicDiseases?: string;
+    familyHistory?: string;
 }

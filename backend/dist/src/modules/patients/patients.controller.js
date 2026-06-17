@@ -42,6 +42,9 @@ let PatientsController = class PatientsController {
     createVisit(id, createVisitDto) {
         return this.patientsService.createVisit(id, createVisitDto);
     }
+    findAllVisits(search, page, limit) {
+        return this.patientsService.findAllVisits(search, page ? +page : 1, limit ? +limit : 50);
+    }
 };
 exports.PatientsController = PatientsController;
 __decorate([
@@ -90,6 +93,17 @@ __decorate([
     __metadata("design:paramtypes", [String, create_visit_dto_1.CreateVisitDto]),
     __metadata("design:returntype", void 0)
 ], PatientsController.prototype, "createVisit", null);
+__decorate([
+    (0, common_1.Get)('visits/all'),
+    (0, roles_decorator_1.Roles)('SUPER_ADMIN', 'DOCTOR', 'TENANT_ADMIN'),
+    (0, swagger_1.ApiOperation)({ summary: 'Get all visits across all patients (central medical records)' }),
+    __param(0, (0, common_1.Query)('search')),
+    __param(1, (0, common_1.Query)('page')),
+    __param(2, (0, common_1.Query)('limit')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String, String]),
+    __metadata("design:returntype", void 0)
+], PatientsController.prototype, "findAllVisits", null);
 exports.PatientsController = PatientsController = __decorate([
     (0, swagger_1.ApiTags)('patients'),
     (0, swagger_1.ApiBearerAuth)(),

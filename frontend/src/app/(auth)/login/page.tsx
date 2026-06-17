@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -33,39 +33,35 @@ export default function LoginPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    // Clear any stale session data
-    localStorage.clear();
-  }, []);
-
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
+    defaultValues: { email: "", password: "" },
   });
 
   async function onSubmit(data: LoginFormValues) {
     setIsLoading(true);
     try {
       const response = await api.post("/auth/login", data);
-      
-      // Store the token in localStorage and as a cookie for middleware
-      if (response.data?.access_token) {
-        localStorage.setItem("access_token", response.data.access_token);
-        // Also set as cookie to be accessible by middleware
-        document.cookie = `access_token=${response.data.access_token}; path=/; max-age=86400; SameSite=Strict`;
-      } else {
-        throw new Error("لم يتم العثور على التوكن في الاستجابة");
-      }
-        
-        toast.success("تم تسجيل الدخول بنجاح", {
-          description: "جاري تحويلك إلى لوحة التحكم...",
-        });
-        
-        // Redirect to dashboard
-        router.push("/dashboard");
+
+      const { access_token, user } = response.data;
+
+      if (!access_token) throw new Error("لم يتم العثور على التوكن في الاستجابة");
+
+      // 1. Store token in localStorage (used by axios interceptor for Authorization header)
+      localStorage.setItem("access_token", access_token);
+
+      // 2. Store user info for display (non-sensitive)
+      localStorage.setItem("user_info", JSON.stringify(user));
+
+      // 3. Set a readable cookie for Next.js middleware (to decode role for RBAC)
+      //    This is separate from the HttpOnly cookie set by the backend
+      document.cookie = `access_token=${access_token}; path=/; max-age=86400; SameSite=Lax`;
+
+      toast.success("تم تسجيل الدخول بنجاح", {
+        description: "جاري تحويلك إلى لوحة التحكم...",
+      });
+
+      router.push("/dashboard");
     } catch (error: any) {
       toast.error("فشل تسجيل الدخول", {
         description: error.response?.data?.message || "البريد الإلكتروني أو كلمة المرور غير صحيحة.",
@@ -86,7 +82,7 @@ export default function LoginPage() {
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-            
+
             <FormField
               control={form.control}
               name="email"
@@ -98,12 +94,7 @@ export default function LoginPage() {
                       <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                         <Mail className="h-5 w-5 text-slate-400" />
                       </div>
-                      <Input 
-                        type="email" 
-                        dir="ltr" 
-                        className="text-left pr-10" 
-                        {...field} 
-                      />
+                      <Input type="email" dir="ltr" className="text-left pr-10" {...field} />
                     </div>
                   </FormControl>
                   <FormMessage />
@@ -127,12 +118,7 @@ export default function LoginPage() {
                       <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                         <Lock className="h-5 w-5 text-slate-400" />
                       </div>
-                      <Input 
-                        type="password" 
-                        dir="ltr" 
-                        className="text-left pr-10" 
-                        {...field} 
-                      />
+                      <Input type="password" dir="ltr" className="text-left pr-10" {...field} />
                     </div>
                   </FormControl>
                   <FormMessage />
@@ -152,9 +138,9 @@ export default function LoginPage() {
             </Button>
           </form>
         </Form>
-        
+
         <div className="mt-6 text-center text-sm text-slate-600">
-          ليس لديك حساب عيادة؟{" "}
+          ليس لديك حساب عيادة?{" "}
           <Link href="/register" className="font-semibold text-brand-600 hover:text-brand-700 transition-colors">
             سجل عيادتك الآن
           </Link>

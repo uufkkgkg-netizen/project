@@ -105,6 +105,22 @@ model Patient {
   createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz
   updatedAt      DateTime  @updatedAt @map("updated_at") @db.Timestamptz
 
+  // --- OB/GYN Specific Fields ---
+  // Obstetric History
+  gravida           Int?      @db.Integer                         // عدد مرات الحمل الكلية
+  para              Int?      @db.Integer                         // عدد الولادات الناجحة
+  abortus           Int?      @db.Integer                         // عدد الإجهاضات
+  livingChildren    Int?      @map("living_children") @db.Integer // عدد الأطفال الأحياء
+  lastMenstrualPeriod DateTime? @map("last_menstrual_period") @db.Date // آخر دورة شهرية
+  estimatedDueDate  DateTime? @map("estimated_due_date") @db.Date     // تاريخ الولادة المتوقعة
+  gestationalAge    String?   @map("gestational_age") @db.VarChar(50) // عمر الحمل
+  
+  // Gynecological History
+  contraceptiveMethod  String?  @map("contraceptive_method") @db.VarChar(100)  // وسيلة منع الحمل
+  previousSurgeries    String?  @map("previous_surgeries") @db.Text             // العمليات الجراحية السابقة
+  chronicDiseases      String?  @map("chronic_diseases") @db.Text               // الأمراض المزمنة
+  familyHistory        String?  @map("family_history") @db.Text                 // التاريخ العائلي المرضي
+
   tenant              Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   appointments        Appointment[]
   medicalRecords      MedicalRecord[]

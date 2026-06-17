@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Patch, Body, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Body, Param, Query, UseGuards } from '@nestjs/common';
 import { PatientsService } from './patients.service';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
@@ -51,4 +51,18 @@ export class PatientsController {
   createVisit(@Param('id') id: string, @Body() createVisitDto: CreateVisitDto) {
     return this.patientsService.createVisit(id, createVisitDto);
   }
+
+  // --- CENTRAL MEDICAL RECORDS ---
+
+  @Get('visits/all')
+  @Roles('SUPER_ADMIN', 'DOCTOR', 'TENANT_ADMIN')
+  @ApiOperation({ summary: 'Get all visits across all patients (central medical records)' })
+  findAllVisits(
+    @Query('search') search?: string,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+  ) {
+    return this.patientsService.findAllVisits(search, page ? +page : 1, limit ? +limit : 50);
+  }
 }
+

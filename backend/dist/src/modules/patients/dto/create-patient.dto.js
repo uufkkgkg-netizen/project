@@ -20,6 +20,17 @@ class CreatePatientDto {
     medicalNotes;
     allergies;
     medicalHistory;
+    gravida;
+    para;
+    abortus;
+    livingChildren;
+    lastMenstrualPeriod;
+    estimatedDueDate;
+    gestationalAge;
+    contraceptiveMethod;
+    previousSurgeries;
+    chronicDiseases;
+    familyHistory;
 }
 exports.CreatePatientDto = CreatePatientDto;
 __decorate([
@@ -66,4 +77,76 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreatePatientDto.prototype, "medicalHistory", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ example: 3, description: 'Gravida - total number of pregnancies' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsInt)(),
+    (0, class_validator_1.Min)(0),
+    __metadata("design:type", Number)
+], CreatePatientDto.prototype, "gravida", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ example: 2, description: 'Para - number of deliveries' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsInt)(),
+    (0, class_validator_1.Min)(0),
+    __metadata("design:type", Number)
+], CreatePatientDto.prototype, "para", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ example: 1, description: 'Abortus - number of abortions/miscarriages' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsInt)(),
+    (0, class_validator_1.Min)(0),
+    __metadata("design:type", Number)
+], CreatePatientDto.prototype, "abortus", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ example: 2, description: 'Number of living children' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsInt)(),
+    (0, class_validator_1.Min)(0),
+    __metadata("design:type", Number)
+], CreatePatientDto.prototype, "livingChildren", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ example: '2025-01-01', description: 'Last Menstrual Period date' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsDateString)(),
+    __metadata("design:type", String)
+], CreatePatientDto.prototype, "lastMenstrualPeriod", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ example: '2025-10-08', description: 'Estimated Due Date' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsDateString)(),
+    __metadata("design:type", String)
+], CreatePatientDto.prototype, "estimatedDueDate", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ example: '28 weeks', description: 'Gestational age' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MaxLength)(50),
+    __metadata("design:type", String)
+], CreatePatientDto.prototype, "gestationalAge", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ example: 'IUD', description: 'Contraceptive method' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MaxLength)(100),
+    __metadata("design:type", String)
+], CreatePatientDto.prototype, "contraceptiveMethod", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ example: 'C-Section 2020' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreatePatientDto.prototype, "previousSurgeries", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ example: 'Diabetes, Hypertension' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreatePatientDto.prototype, "chronicDiseases", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ example: 'Mother has diabetes' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreatePatientDto.prototype, "familyHistory", void 0);
 //# sourceMappingURL=create-patient.dto.js.map

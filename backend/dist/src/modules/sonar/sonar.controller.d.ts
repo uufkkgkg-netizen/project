@@ -18,6 +18,17 @@ export declare class SonarController {
             allergies: string | null;
             medicalHistory: string | null;
             medicalNotes: string | null;
+            gravida: number | null;
+            para: number | null;
+            abortus: number | null;
+            livingChildren: number | null;
+            lastMenstrualPeriod: Date | null;
+            estimatedDueDate: Date | null;
+            gestationalAge: string | null;
+            contraceptiveMethod: string | null;
+            previousSurgeries: string | null;
+            chronicDiseases: string | null;
+            familyHistory: string | null;
         };
     } & {
         id: string;
@@ -66,6 +77,17 @@ export declare class SonarController {
             allergies: string | null;
             medicalHistory: string | null;
             medicalNotes: string | null;
+            gravida: number | null;
+            para: number | null;
+            abortus: number | null;
+            livingChildren: number | null;
+            lastMenstrualPeriod: Date | null;
+            estimatedDueDate: Date | null;
+            gestationalAge: string | null;
+            contraceptiveMethod: string | null;
+            previousSurgeries: string | null;
+            chronicDiseases: string | null;
+            familyHistory: string | null;
         };
     } & {
         id: string;

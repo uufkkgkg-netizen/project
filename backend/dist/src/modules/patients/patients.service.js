@@ -98,6 +98,34 @@ let PatientsService = class PatientsService {
             }
         });
     }
+    async findAllVisits(search, page = 1, limit = 50) {
+        const db = this.prisma.scoped;
+        const skip = (page - 1) * limit;
+        const where = {};
+        if (search) {
+            where.patient = {
+                fullName: { contains: search, mode: 'insensitive' }
+            };
+        }
+        const [visits, total] = await Promise.all([
+            db.visit.findMany({
+                where,
+                orderBy: { visitDate: 'desc' },
+                skip,
+                take: limit,
+                include: {
+                    patient: {
+                        select: { id: true, fullName: true, fileNumber: true, phone: true }
+                    },
+                    doctor: {
+                        select: { firstName: true, lastName: true }
+                    }
+                }
+            }),
+            db.visit.count({ where })
+        ]);
+        return { data: visits, total, page, limit };
+    }
 };
 exports.PatientsService = PatientsService;
 exports.PatientsService = PatientsService = __decorate([

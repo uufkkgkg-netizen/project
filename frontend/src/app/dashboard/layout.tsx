@@ -38,21 +38,39 @@ export default function DashboardLayout({
     const token = localStorage.getItem("access_token");
     if (!token) {
       router.push("/login");
-    } else {
-      try {
-        const decoded: any = jwtDecode(token);
-        setUserRole(decoded.role || "SUPER_ADMIN"); // default bypass if decoding fails but token exists
+      return;
+    }
+    try {
+      // Try reading role from stored user_info first (faster, no decode needed)
+      const userInfoStr = localStorage.getItem("user_info");
+      if (userInfoStr) {
+        const userInfo = JSON.parse(userInfoStr);
+        setUserRole(userInfo.role || "SUPER_ADMIN");
         setIsAuthenticated(true);
-      } catch (e) {
-        localStorage.removeItem("access_token");
-        document.cookie = "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        router.push("/login");
+        return;
       }
+      // Fallback: decode JWT directly
+      const decoded: any = jwtDecode(token);
+      setUserRole(decoded.role || "SUPER_ADMIN");
+      setIsAuthenticated(true);
+    } catch (e) {
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("user_info");
+      document.cookie = "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      router.push("/login");
     }
   }, [router]);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      // Clear backend HttpOnly cookie
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://femcare-backend-api.onrender.com/api'}/auth/logout`, {
+        method: 'POST', credentials: 'include'
+      });
+    } catch {}
     localStorage.removeItem("access_token");
+    localStorage.removeItem("user_info");
+    localStorage.removeItem("impersonated_tenant_id");
     document.cookie = "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     router.push("/login");
   };

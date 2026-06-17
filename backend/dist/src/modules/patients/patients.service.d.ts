@@ -11,4 +11,10 @@ export declare class PatientsService {
     findOne(id: string): Promise<any>;
     update(id: string, updatePatientDto: UpdatePatientDto): Promise<any>;
     createVisit(patientId: string, createVisitDto: CreateVisitDto): Promise<any>;
+    findAllVisits(search?: string, page?: number, limit?: number): Promise<{
+        data: any;
+        total: any;
+        page: number;
+        limit: number;
+    }>;
 }
