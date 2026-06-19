@@ -20,7 +20,7 @@ export const api = axios.create({
   baseURL: API_BASE,
   headers: { 'Content-Type': 'application/json' },
   withCredentials: true, // Send HttpOnly cookie automatically
-  timeout: 10000, // 10 seconds timeout
+  timeout: 30000, // 30 seconds timeout to handle Render cold-starts
 });
 
 // ── Retry Logic for GET Requests ───────────────────────────────────────────
