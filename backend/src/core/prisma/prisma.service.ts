@@ -1,8 +1,6 @@
 import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { TenantContext } from './tenant.context';
-import { Pool } from 'pg';
-import { PrismaPg } from '@prisma/adapter-pg';
 
 // Models that must be scoped to a tenant (all multi-tenant clinical data)
 const TENANT_SCOPED_MODELS = new Set([
@@ -13,10 +11,7 @@ const TENANT_SCOPED_MODELS = new Set([
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
   constructor() {
-    const connectionString = process.env.DATABASE_URL;
-    const pool = new Pool({ connectionString });
-    const adapter = new PrismaPg(pool);
-   super();
+    super();
   }
 
   async onModuleInit() {
