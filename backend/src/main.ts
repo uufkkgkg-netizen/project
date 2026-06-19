@@ -17,19 +17,18 @@ const originalLog = console.log;
 const originalError = console.error;
 const originalWarn = console.warn;
 
+const util = require('util');
+
 console.log = (...args) => {
-  memoryLogs.push(`[LOG] ${new Date().toISOString()} ` + args.join(' '));
-  if (memoryLogs.length > 1000) memoryLogs.shift();
+  try { memoryLogs.push(`[LOG] ${new Date().toISOString()} ` + util.format(...args)); if (memoryLogs.length > 1000) memoryLogs.shift(); } catch(e){}
   originalLog.apply(console, args);
 };
 console.error = (...args) => {
-  memoryLogs.push(`[ERR] ${new Date().toISOString()} ` + args.join(' '));
-  if (memoryLogs.length > 1000) memoryLogs.shift();
+  try { memoryLogs.push(`[ERR] ${new Date().toISOString()} ` + util.format(...args)); if (memoryLogs.length > 1000) memoryLogs.shift(); } catch(e){}
   originalError.apply(console, args);
 };
 console.warn = (...args) => {
-  memoryLogs.push(`[WARN] ${new Date().toISOString()} ` + args.join(' '));
-  if (memoryLogs.length > 1000) memoryLogs.shift();
+  try { memoryLogs.push(`[WARN] ${new Date().toISOString()} ` + util.format(...args)); if (memoryLogs.length > 1000) memoryLogs.shift(); } catch(e){}
   originalWarn.apply(console, args);
 };
 
