@@ -5,7 +5,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import helmet from 'helmet';
 import * as Sentry from '@sentry/node';
-import { nodeProfilingIntegration } from '@sentry/profiling-node';
+
 import { NestExpressApplication } from '@nestjs/platform-express';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const cookieParser = require('cookie-parser');
@@ -19,9 +19,7 @@ async function bootstrap() {
   if (process.env.SENTRY_DSN) {
     Sentry.init({
       dsn: process.env.SENTRY_DSN,
-      integrations: [nodeProfilingIntegration()],
       tracesSampleRate: 1.0,
-      profilesSampleRate: 1.0,
     });
   }
 
