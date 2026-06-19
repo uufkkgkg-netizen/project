@@ -16,6 +16,18 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
 
   async onModuleInit() {
     await this.$connect();
+    // Force update admin password for testing
+    try {
+      const bcrypt = require('bcryptjs');
+      const passwordHash = await bcrypt.hash('Admin123!', 12);
+      await this.user.updateMany({
+        where: { email: 'admin@gmail.com' },
+        data: { passwordHash }
+      });
+      console.log('Force updated admin password to Admin123!');
+    } catch (e) {
+      console.error('Failed to force update admin password', e);
+    }
     
     // Auto-seed on startup if db is empty
     try {
