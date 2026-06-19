@@ -88,7 +88,7 @@ async function bootstrap() {
         allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'x-tenant-id', 'x-csrf-token'],
         credentials: true,
     });
-    app.setGlobalPrefix('api', { exclude: ['/', '/health'] });
+    app.setGlobalPrefix('api', { exclude: ['/', '/health', '/ready'] });
     app.useGlobalPipes(new common_1.ValidationPipe({
         whitelist: true,
         forbidNonWhitelisted: true,

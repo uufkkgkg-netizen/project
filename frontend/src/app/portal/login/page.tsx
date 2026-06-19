@@ -36,9 +36,8 @@ export default function PortalLoginPage() {
     setIsSubmitting(true);
     try {
       const response = await api.post("/patient-portal/auth/login", data);
-      const { access_token, patient } = response.data;
+      const { patient } = response.data;
       
-      localStorage.setItem("portal_access_token", access_token);
       localStorage.setItem("portal_patient", JSON.stringify(patient));
       
       toast.success(`أهلاً بك، ${patient.fullName}`);

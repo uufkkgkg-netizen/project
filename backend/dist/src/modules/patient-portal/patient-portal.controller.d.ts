@@ -2,14 +2,16 @@ import { PatientPortalService, PatientLoginDto } from './patient-portal.service'
 export declare class PatientPortalController {
     private readonly portalService;
     constructor(portalService: PatientPortalService);
-    login(dto: PatientLoginDto): Promise<{
-        access_token: string;
+    login(dto: PatientLoginDto, res: any): Promise<{
         patient: {
             id: string;
             fullName: string;
             phone: string | null;
             tenantName: string;
         };
+    }>;
+    logout(res: any): Promise<{
+        message: string;
     }>;
     getDashboard(req: any): Promise<{
         upcomingAppointments: ({

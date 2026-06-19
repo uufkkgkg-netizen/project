@@ -22,8 +22,21 @@ let PatientPortalController = class PatientPortalController {
     constructor(portalService) {
         this.portalService = portalService;
     }
-    login(dto) {
-        return this.portalService.login(dto);
+    async login(dto, res) {
+        const result = await this.portalService.login(dto);
+        const isProduction = process.env.NODE_ENV === 'production';
+        res.cookie('portal_access_token', result.access_token, {
+            httpOnly: true,
+            secure: isProduction,
+            sameSite: isProduction ? 'none' : 'lax',
+            maxAge: 24 * 60 * 60 * 1000,
+            path: '/',
+        });
+        return { patient: result.patient };
+    }
+    async logout(res) {
+        res.clearCookie('portal_access_token', { path: '/' });
+        return { message: 'Logged out successfully' };
     }
     getDashboard(req) {
         if (req.user.role !== 'PATIENT') {
@@ -37,10 +50,19 @@ __decorate([
     (0, common_1.Post)('auth/login'),
     (0, swagger_1.ApiOperation)({ summary: 'Login for patients using phone and file number' }),
     __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Res)({ passthrough: true })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [patient_portal_service_1.PatientLoginDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:paramtypes", [patient_portal_service_1.PatientLoginDto, Object]),
+    __metadata("design:returntype", Promise)
 ], PatientPortalController.prototype, "login", null);
+__decorate([
+    (0, common_1.Post)('auth/logout'),
+    (0, swagger_1.ApiOperation)({ summary: 'Logout for patients' }),
+    __param(0, (0, common_1.Res)({ passthrough: true })),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], PatientPortalController.prototype, "logout", null);
 __decorate([
     (0, common_1.Get)('dashboard'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),

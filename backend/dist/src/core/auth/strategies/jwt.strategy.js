@@ -17,6 +17,9 @@ function cookieOrBearerExtractor(req) {
     if (req?.cookies?.access_token) {
         return req.cookies.access_token;
     }
+    if (req?.cookies?.portal_access_token) {
+        return req.cookies.portal_access_token;
+    }
     const authHeader = req?.headers?.authorization;
     if (authHeader?.startsWith('Bearer ')) {
         return authHeader.substring(7);
@@ -28,7 +31,7 @@ let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(pas
         super({
             jwtFromRequest: cookieOrBearerExtractor,
             ignoreExpiration: false,
-            secretOrKey: process.env.JWT_SECRET || 'CHANGE_THIS_IN_PRODUCTION_USE_ENV_VAR',
+            secretOrKey: process.env.JWT_SECRET,
             passReqToCallback: false,
         });
     }

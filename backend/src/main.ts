@@ -66,8 +66,8 @@ async function bootstrap() {
     credentials: true,
   });
 
-  // ── Global Prefix (exclude health route) ──────────────────────────────────
-  app.setGlobalPrefix('api', { exclude: ['/', '/health'] });
+  // ── Global Prefix (exclude health/ready route) ──────────────────────────
+  app.setGlobalPrefix('api', { exclude: ['/', '/health', '/ready'] });
 
   // ── Global Validation Pipe ─────────────────────────────────────────────────
   app.useGlobalPipes(new ValidationPipe({

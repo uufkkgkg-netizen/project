@@ -30,11 +30,17 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Get token from cookies
+  // Get staff token from cookies (dashboard)
   const token = request.cookies.get('access_token')?.value;
 
   if (!token && path.startsWith('/dashboard')) {
     return NextResponse.redirect(new URL('/login', request.url));
+  }
+
+  // Get portal token from cookies (patient portal)
+  const portalToken = request.cookies.get('portal_access_token')?.value;
+  if (!portalToken && path.startsWith('/portal') && !path.startsWith('/portal/login')) {
+    return NextResponse.redirect(new URL('/portal/login', request.url));
   }
 
   if (token && path.startsWith('/dashboard')) {

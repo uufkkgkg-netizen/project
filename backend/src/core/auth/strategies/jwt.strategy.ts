@@ -5,11 +5,15 @@ import { Request } from 'express';
 
 // Extract JWT from HttpOnly cookie first, then fall back to Authorization header
 function cookieOrBearerExtractor(req: Request): string | null {
-  // Priority 1: HttpOnly cookie set by backend (most secure)
+  // Priority 1: Staff access_token cookie (admin panel)
   if (req?.cookies?.access_token) {
     return req.cookies.access_token;
   }
-  // Priority 2: Authorization Bearer header (for cross-origin / API clients)
+  // Priority 2: Patient portal cookie
+  if (req?.cookies?.portal_access_token) {
+    return req.cookies.portal_access_token;
+  }
+  // Priority 3: Authorization Bearer header (API clients / Swagger)
   const authHeader = req?.headers?.authorization;
   if (authHeader?.startsWith('Bearer ')) {
     return authHeader.substring(7);
@@ -23,7 +27,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: cookieOrBearerExtractor,
       ignoreExpiration: false,
-      secretOrKey: process.env.JWT_SECRET || 'CHANGE_THIS_IN_PRODUCTION_USE_ENV_VAR',
+      secretOrKey: process.env.JWT_SECRET!,
       passReqToCallback: false,
     });
   }
