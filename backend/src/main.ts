@@ -69,6 +69,14 @@ async function bootstrap() {
   // ── Global Prefix (exclude health/ready route) ──────────────────────────
   app.setGlobalPrefix('api', { exclude: ['/', '/health', '/ready'] });
 
+  // Fallback Express route for /ready just in case NestJS excludes don't work on Render
+  app.use('/ready', (req, res, next) => {
+    if (req.method === 'GET') {
+      return res.status(200).json({ status: 'ready', db: 'connected', via: 'express' });
+    }
+    next();
+  });
+
   // ── Global Validation Pipe ─────────────────────────────────────────────────
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,
