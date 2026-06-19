@@ -1,7 +1,7 @@
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://femcare-backend-api.onrender.com/api';
+const API_BASE = '/api';
 
 // ── Token Store for CSRF Only ──────────────────────────────────────────────
 let _csrfToken: string | null = null;

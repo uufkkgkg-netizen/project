@@ -8,10 +8,12 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   async rewrites() {
+    // Proxy /api to the backend to avoid cross-domain cookie issues
+    const backendUrl = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || "https://femcare-backend-api.onrender.com";
     return [
       {
         source: "/api/:path*",
-        destination: "http://localhost:3001/api/:path*",
+        destination: `${backendUrl}/api/:path*`,
       },
     ];
   },
