@@ -7,7 +7,6 @@ import helmet from 'helmet';
 import * as Sentry from '@sentry/node';
 
 import { NestExpressApplication } from '@nestjs/platform-express';
-import * as express from 'express';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const cookieParser = require('cookie-parser');
 
@@ -17,18 +16,19 @@ const originalLog = console.log;
 const originalError = console.error;
 const originalWarn = console.warn;
 
-const util = require('util');
-
 console.log = (...args) => {
-  try { memoryLogs.push(`[LOG] ${new Date().toISOString()} ` + util.format(...args)); if (memoryLogs.length > 1000) memoryLogs.shift(); } catch(e){}
+  memoryLogs.push(`[LOG] ${new Date().toISOString()} ` + args.join(' '));
+  if (memoryLogs.length > 1000) memoryLogs.shift();
   originalLog.apply(console, args);
 };
 console.error = (...args) => {
-  try { memoryLogs.push(`[ERR] ${new Date().toISOString()} ` + util.format(...args)); if (memoryLogs.length > 1000) memoryLogs.shift(); } catch(e){}
+  memoryLogs.push(`[ERR] ${new Date().toISOString()} ` + args.join(' '));
+  if (memoryLogs.length > 1000) memoryLogs.shift();
   originalError.apply(console, args);
 };
 console.warn = (...args) => {
-  try { memoryLogs.push(`[WARN] ${new Date().toISOString()} ` + util.format(...args)); if (memoryLogs.length > 1000) memoryLogs.shift(); } catch(e){}
+  memoryLogs.push(`[WARN] ${new Date().toISOString()} ` + args.join(' '));
+  if (memoryLogs.length > 1000) memoryLogs.shift();
   originalWarn.apply(console, args);
 };
 
