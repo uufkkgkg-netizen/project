@@ -7,6 +7,7 @@ import helmet from 'helmet';
 import * as Sentry from '@sentry/node';
 
 import { NestExpressApplication } from '@nestjs/platform-express';
+import * as express from 'express';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const cookieParser = require('cookie-parser');
 
