@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, RequestMethod } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import helmet from 'helmet';
@@ -66,15 +66,22 @@ async function bootstrap() {
     credentials: true,
   });
 
-  // ── Global Prefix (exclude health/ready route) ──────────────────────────
-  app.setGlobalPrefix('api', { exclude: ['/', '/health', '/ready'] });
-
-  // Fallback Express route for /ready just in case NestJS excludes don't work on Render
-  app.use('/ready', (req, res, next) => {
+  // ── Express fallback for /ready BEFORE NestJS router ──────────────────────
+  // Must be registered before setGlobalPrefix so it intercepts first
+  app.use('/ready', (req: any, res: any, next: any) => {
     if (req.method === 'GET') {
-      return res.status(200).json({ status: 'ready', db: 'connected', via: 'express' });
+      return res.status(200).json({ status: 'ready', db: 'connected', timestamp: new Date().toISOString() });
     }
     next();
+  });
+
+  // ── Global Prefix with proper RouteInfo exclusions ───────────────────────
+  app.setGlobalPrefix('api', {
+    exclude: [
+      { path: '', method: RequestMethod.GET },
+      { path: 'health', method: RequestMethod.GET },
+      { path: 'ready', method: RequestMethod.GET },
+    ],
   });
 
   // ── Global Validation Pipe ─────────────────────────────────────────────────
