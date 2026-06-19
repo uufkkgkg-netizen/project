@@ -1,4 +1,4 @@
-import { Controller, Get, Res, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Res, HttpStatus, HttpException } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { AppService } from './app.service';
 import { PrismaService } from './core/prisma/prisma.service';
@@ -37,21 +37,21 @@ export class AppController {
 
   @Get('ready')
   @ApiOperation({ summary: 'Readiness check (DB + Services)' })
-  async getReady(@Res() res: Response) {
+  async getReady() {
     try {
       // Ping DB
       await this.prisma.$queryRaw`SELECT 1`;
-      return res.status(HttpStatus.OK).json({
+      return {
         status: 'ready',
         db: 'connected',
         timestamp: new Date().toISOString(),
-      });
+      };
     } catch (error) {
-      return res.status(HttpStatus.SERVICE_UNAVAILABLE).json({
+      throw new HttpException({
         status: 'error',
         message: 'Database not ready',
         timestamp: new Date().toISOString(),
-      });
+      }, HttpStatus.SERVICE_UNAVAILABLE);
     }
   }
 }
