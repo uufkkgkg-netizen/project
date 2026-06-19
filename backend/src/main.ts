@@ -10,6 +10,35 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const cookieParser = require('cookie-parser');
 
+// Temporary in-memory logger for Render debugging
+const memoryLogs: string[] = [];
+const originalLog = console.log;
+const originalError = console.error;
+const originalWarn = console.warn;
+
+console.log = (...args) => {
+  memoryLogs.push(`[LOG] ${new Date().toISOString()} ` + args.join(' '));
+  if (memoryLogs.length > 1000) memoryLogs.shift();
+  originalLog.apply(console, args);
+};
+console.error = (...args) => {
+  memoryLogs.push(`[ERR] ${new Date().toISOString()} ` + args.join(' '));
+  if (memoryLogs.length > 1000) memoryLogs.shift();
+  originalError.apply(console, args);
+};
+console.warn = (...args) => {
+  memoryLogs.push(`[WARN] ${new Date().toISOString()} ` + args.join(' '));
+  if (memoryLogs.length > 1000) memoryLogs.shift();
+  originalWarn.apply(console, args);
+};
+
+process.on('uncaughtException', (err) => {
+  console.error('UNCAUGHT EXCEPTION:', err);
+});
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('UNHANDLED REJECTION:', reason);
+});
+
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     logger: ['error', 'warn', 'log'],
@@ -74,6 +103,13 @@ async function bootstrap() {
   });
 
   // ── Global Prefix with proper RouteInfo exclusions ───────────────────────
+  app.use(
+    '/api/logs',
+    (req: express.Request, res: express.Response) => {
+      res.status(200).json(memoryLogs);
+    },
+  );
+
   app.setGlobalPrefix('api', {
     exclude: [
       { path: '', method: RequestMethod.GET },

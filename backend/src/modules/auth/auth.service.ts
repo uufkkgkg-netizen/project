@@ -14,21 +14,30 @@ export class AuthService {
   ) {}
 
   async login(email: string, pass: string, ipAddress?: string, deviceInfo?: string) {
+    console.log(`[LOGIN_TRACE] Starting login for ${email}`);
     const user = await this.prisma.user.findUnique({ where: { email } });
+    console.log(`[LOGIN_TRACE] User found: ${!!user}`);
 
     if (!user || !user.isActive) {
+      console.log(`[LOGIN_TRACE] Invalid credentials (user missing or inactive)`);
       throw new UnauthorizedException('Invalid credentials');
     }
 
+    console.log(`[LOGIN_TRACE] Comparing password...`);
     const isMatch = await bcrypt.compare(pass, user.passwordHash);
+    console.log(`[LOGIN_TRACE] Password match: ${isMatch}`);
+
     if (!isMatch) {
+      console.log(`[LOGIN_TRACE] Invalid credentials (password mismatch)`);
       throw new UnauthorizedException('Invalid credentials');
     }
 
+    console.log(`[LOGIN_TRACE] Updating lastLogin...`);
     await this.prisma.user.update({
       where: { id: user.id },
       data: { lastLogin: new Date() },
     });
+    console.log(`[LOGIN_TRACE] lastLogin updated.`);
 
     const isSuperAdmin = user.role === UserRole.SUPER_ADMIN;
 
@@ -40,13 +49,17 @@ export class AuthService {
       isSuperAdmin,
     };
 
+    console.log(`[LOGIN_TRACE] Signing JWT...`);
     const access_token = await this.jwtService.signAsync(payload);
+    console.log(`[LOGIN_TRACE] JWT signed. Generating CSRF and Refresh tokens...`);
+    
     const csrfToken = crypto.randomBytes(32).toString('hex');
     const refreshToken = crypto.randomBytes(64).toString('hex');
 
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + 7); // 7 days
 
+    console.log(`[LOGIN_TRACE] Creating session...`);
     await this.prisma.session.create({
       data: {
         userId: user.id,
@@ -56,6 +69,7 @@ export class AuthService {
         expiresAt,
       },
     });
+    console.log(`[LOGIN_TRACE] Session created. Returning tokens.`);
 
     return {
       access_token,
