@@ -23,14 +23,16 @@ export const api = axios.create({
   timeout: 30000, // 30 seconds timeout to handle Render cold-starts
 });
 
-// ── Retry Logic for GET Requests ───────────────────────────────────────────
+// ── Retry Logic for Requests ───────────────────────────────────────────
 axiosRetry(api, {
-  retries: 3, // number of retries
-  retryDelay: axiosRetry.exponentialDelay,
+  retries: 3, // Retry up to 3 times
+  retryDelay: (retryCount) => {
+    return retryCount * 2000; // Wait 2s, 4s, 6s
+  },
   retryCondition: (error) => {
-    // Only retry GET requests on network errors or 5xx
-    if (error.config?.method !== 'get') return false;
-    return axiosRetry.isNetworkOrIdempotentRequestError(error) || (error.response && error.response.status >= 500);
+    // Retry on network errors or 502/503/504 (Cold Start errors)
+    return axiosRetry.isNetworkOrIdempotentRequestError(error) || 
+           (error.response && error.response.status >= 502);
   },
 });
 
@@ -68,8 +70,10 @@ api.interceptors.response.use(
         error.userMessage = "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
       } else if (status === 429) {
         error.userMessage = "محاولات عديدة، يرجى المحاولة لاحقاً.";
+      } else if (status === 502 || status === 503 || status === 504) {
+        error.userMessage = "الخادم قيد الإيقاظ الآن (Cold Start)... يرجى الانتظار بضع ثوانٍ والمحاولة مجدداً.";
       } else if (status >= 500) {
-        error.userMessage = "خطأ في الاتصال بالخادم، تواصل مع الدعم.";
+        error.userMessage = "خطأ داخلي في الخادم، تواصل مع الدعم.";
       } else {
         error.userMessage = error.response.data?.message || "حدث خطأ غير متوقع.";
       }
