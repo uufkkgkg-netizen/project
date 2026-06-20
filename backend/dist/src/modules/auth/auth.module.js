@@ -23,9 +23,9 @@ exports.AuthModule = AuthModule = __decorate([
             jwt_1.JwtModule.register({
                 secret: (() => {
                     if (!process.env.JWT_SECRET && process.env.NODE_ENV === 'production') {
-                        throw new Error('FATAL: JWT_SECRET environment variable is missing. The application will not start securely.');
+                        throw new Error('FATAL ERROR: JWT_SECRET environment variable is missing in production. Application cannot start securely.');
                     }
-                    return process.env.JWT_SECRET || 'dev_secret_fallback_only';
+                    return process.env.JWT_SECRET || 'dev_secret_fallback_only_change_me_in_prod_12345';
                 })(),
                 signOptions: { expiresIn: '15m' },
             }),

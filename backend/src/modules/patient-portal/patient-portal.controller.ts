@@ -32,6 +32,19 @@ export class PatientPortalController {
     return { message: 'Logged out successfully' };
   }
 
+  @Get('auth/me')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get current patient session' })
+  async getMe(@Request() req) {
+    if (req.user.role !== 'PATIENT') {
+      throw new Error('Unauthorized');
+    }
+    // Simple return of patient info
+    const dashboardData = await this.portalService.getDashboardData(req.user.patientId);
+    return { patient: dashboardData.patient };
+  }
+
   @Get('dashboard')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()

@@ -39,5 +39,5 @@ EXPOSE 10000
 ENV NODE_ENV=production
 ENV PORT=10000
 
-# التشغيل مع التأكد من تشغيل الترحيلات (Migrations)
-CMD ["sh", "-c", "npx prisma migrate deploy && node dist/src/main.js"]
+# Boot only — migrations run via preDeployCommand in render.yaml (not here)
+CMD ["node", "dist/src/main.js"]

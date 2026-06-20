@@ -7,7 +7,12 @@ services:
     plan: free
     region: frankfurt
     branch: main
-    healthCheckPath: /health
+    # PRE-2: /ready checks DB — /health is process-only (no DB query)
+    healthCheckPath: /ready
+    # PRE-3 / CAUSE-3: Disable autoDeploy. Deploys only via GitHub Actions workflow_dispatch or tag push
+    autoDeploy: false
+    # PRE-3 / CAUSE-1: Run migrations BEFORE boot, not inside the container CMD
+    preDeployCommand: "cd backend && npm run migrate:deploy"
     envVars:
       - key: NODE_ENV
         value: production
@@ -18,7 +23,7 @@ services:
           name: femcare-prod-db
           property: connectionString
       # IMPORTANT: Set JWT_SECRET manually in Render Dashboard > Environment
-      # Use a strong random value: openssl rand -base64 64
+      # Generate: openssl rand -base64 64  (must be >= 32 chars)
       - key: JWT_SECRET
         sync: false  # Must be set manually — do NOT use generateValue (changes on each deploy)
       - key: FRONTEND_URL
@@ -32,6 +37,7 @@ services:
     plan: free
     region: frankfurt
     branch: main
+    autoDeploy: false
     envVars:
       - key: NODE_ENV
         value: production

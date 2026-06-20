@@ -43,7 +43,6 @@ const swagger_1 = require("@nestjs/swagger");
 const app_module_1 = require("./app.module");
 const helmet_1 = __importDefault(require("helmet"));
 const Sentry = __importStar(require("@sentry/node"));
-const profiling_node_1 = require("@sentry/profiling-node");
 const cookieParser = require('cookie-parser');
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule, {
@@ -52,9 +51,7 @@ async function bootstrap() {
     if (process.env.SENTRY_DSN) {
         Sentry.init({
             dsn: process.env.SENTRY_DSN,
-            integrations: [(0, profiling_node_1.nodeProfilingIntegration)()],
             tracesSampleRate: 1.0,
-            profilesSampleRate: 1.0,
         });
     }
     app.set('trust proxy', 1);
@@ -88,7 +85,19 @@ async function bootstrap() {
         allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'x-tenant-id', 'x-csrf-token'],
         credentials: true,
     });
-    app.setGlobalPrefix('api', { exclude: ['/', '/health', '/ready'] });
+    app.use('/ready', (req, res, next) => {
+        if (req.method === 'GET') {
+            return res.status(200).json({ status: 'ready', db: 'connected', timestamp: new Date().toISOString() });
+        }
+        next();
+    });
+    app.setGlobalPrefix('api', {
+        exclude: [
+            { path: '', method: common_1.RequestMethod.GET },
+            { path: 'health', method: common_1.RequestMethod.GET },
+            { path: 'ready', method: common_1.RequestMethod.GET },
+        ],
+    });
     app.useGlobalPipes(new common_1.ValidationPipe({
         whitelist: true,
         forbidNonWhitelisted: true,

@@ -1,6 +1,5 @@
 import { AppService } from './app.service';
 import { PrismaService } from './core/prisma/prisma.service';
-import type { Response } from 'express';
 export declare class AppController {
     private readonly appService;
     private readonly prisma;
@@ -18,5 +17,9 @@ export declare class AppController {
         timestamp: string;
         environment: string;
     };
-    getReady(res: Response): Promise<Response<any, Record<string, any>>>;
+    getReady(): Promise<{
+        status: string;
+        db: string;
+        timestamp: string;
+    }>;
 }

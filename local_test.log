@@ -1,0 +1,119 @@
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٢٩ م [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٢٩ م [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPrismaModule dependencies initialized[39m[38;5;3m +46ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٢٩ م [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPassportModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٢٩ م [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mThrottlerModule dependencies initialized[39m[38;5;3m +9ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٢٩ م [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtModule dependencies initialized[39m[38;5;3m +2ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٢٩ م [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mDiscoveryModule dependencies initialized[39m[38;5;3m +3ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٢٩ م [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mScheduleModule dependencies initialized[39m[38;5;3m +4ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٢٩ م [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +2ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٢٩ م [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPatientsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٢٩ م [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mSonarModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٢٩ م [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAdminModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٢٩ م [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mStaffModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٢٩ م [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mMedicalTemplatesModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٢٩ م [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mUltrasoundReportsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٢٩ م [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mSettingsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٢٩ م [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppointmentsModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٢٩ م [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mMedicalRecordsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٢٩ م [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAnalyticsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٢٩ م [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPrescriptionsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٢٩ م [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mBillingModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٢٩ م [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mWhatsappModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٢٩ م [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAuditModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٢٩ م [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAuthModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAppController {/api}:[39m[38;5;3m +96ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/, GET} route[39m[38;5;3m +6ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/health, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ready, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAuditController {/api/audit}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/audit, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/audit/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAuthController {/api/auth}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/auth/login, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/auth/refresh, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/auth/me, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/auth/logout, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/auth/logout-all, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/auth/register, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/auth/seed, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mPatientsController {/api/patients}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/patients, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/patients, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/patients/:id, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/patients/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/patients/:id/visits, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/patients/visits/all, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAppointmentsController {/api/appointments}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/appointments, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/appointments, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/appointments/:id, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/appointments/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/appointments/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mMedicalRecordsController {/api/medical-records}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/medical-records, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/medical-records/patient/:patientId, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/medical-records/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAnalyticsController {/api/analytics}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/analytics/summary, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mPrescriptionsController {/api/prescriptions}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/prescriptions, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/prescriptions, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/prescriptions/patient/:patientId, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/prescriptions/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/prescriptions/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mBillingController {/api/billing}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/billing, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/billing, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/billing/summary, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/billing/patient/:patientId, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/billing/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/billing/:id/payments, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/billing/:id/cancel, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mSonarController {/api/sonar}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/sonar, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/sonar, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/sonar/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAdminController {/api/admin}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/admin/clinics, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/admin/clinics/:tenantId/subscription, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/admin/clinics/:tenantId/subscription/history, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mStaffController {/api/staff}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/staff, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/staff, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/staff/:id/role, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/staff/:id/status, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mMedicalTemplatesController {/api/templates}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/templates, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/templates/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/templates, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/templates/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/templates/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mUltrasoundReportsController {/api/ultrasound}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/ultrasound, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/ultrasound, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/ultrasound/patient/:patientId, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/ultrasound/generate-preview/:templateId/:patientId, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mSettingsController {/api/settings}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/settings, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/settings, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mWhatsappController {/api/whatsapp}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/whatsapp/logs, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [32m    LOG[39m [38;5;3m[NestApplication] [39m[32mNest application successfully started[39m[38;5;3m +141ms[39m
+[31m[Nest] 16128  - [39m١٩‏/٠٦‏/٢٠٢٦، ٦:٣٠:٣٠ م [31m  ERROR[39m [38;5;3m[NestApplication] [39m[31mError: listen EADDRINUSE: address already in use 0.0.0.0:3001[39m[38;5;3m +15ms[39m
+node:net:2008
+    const ex = new UVExceptionWithHostPort(err, 'listen', address, port);
+               ^
+
+Error: listen EADDRINUSE: address already in use 0.0.0.0:3001
+    at Server.setupListenHandle [as _listen2] (node:net:2008:16)
+    at listenInCluster (node:net:2065:12)
+    at node:net:2274:7
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '0.0.0.0',
+  port: 3001
+}
+
+Node.js v24.16.0

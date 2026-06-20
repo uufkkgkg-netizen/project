@@ -24,10 +24,15 @@ function cookieOrBearerExtractor(req: Request): string | null {
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor() {
+    const secret = process.env.JWT_SECRET;
+    if (!secret || secret.length < 32) {
+      console.error('FATAL: JWT_SECRET is missing or shorter than 32 characters. Exiting with code 1.');
+      process.exit(1);
+    }
     super({
       jwtFromRequest: cookieOrBearerExtractor,
       ignoreExpiration: false,
-      secretOrKey: process.env.JWT_SECRET || 'TEMP_SECRET_FOR_RENDER_DEPLOYMENT_PLEASE_CHANGE',
+      secretOrKey: secret,
       passReqToCallback: false,
     });
   }

@@ -38,8 +38,6 @@ export default function PortalLoginPage() {
       const response = await api.post("/patient-portal/auth/login", data);
       const { patient } = response.data;
       
-      localStorage.setItem("portal_patient", JSON.stringify(patient));
-      
       toast.success(`أهلاً بك، ${patient.fullName}`);
       router.push("/portal");
     } catch (err: any) {

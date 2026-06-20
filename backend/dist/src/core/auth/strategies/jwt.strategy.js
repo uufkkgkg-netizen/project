@@ -31,7 +31,7 @@ let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(pas
         super({
             jwtFromRequest: cookieOrBearerExtractor,
             ignoreExpiration: false,
-            secretOrKey: process.env.JWT_SECRET,
+            secretOrKey: process.env.JWT_SECRET || 'TEMP_SECRET_FOR_RENDER_DEPLOYMENT_PLEASE_CHANGE',
             passReqToCallback: false,
         });
     }

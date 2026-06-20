@@ -8,9 +8,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppController = void 0;
 const common_1 = require("@nestjs/common");
@@ -41,21 +38,21 @@ let AppController = class AppController {
             environment: process.env.NODE_ENV || 'development',
         };
     }
-    async getReady(res) {
+    async getReady() {
         try {
             await this.prisma.$queryRaw `SELECT 1`;
-            return res.status(common_1.HttpStatus.OK).json({
+            return {
                 status: 'ready',
                 db: 'connected',
                 timestamp: new Date().toISOString(),
-            });
+            };
         }
         catch (error) {
-            return res.status(common_1.HttpStatus.SERVICE_UNAVAILABLE).json({
+            throw new common_1.HttpException({
                 status: 'error',
                 message: 'Database not ready',
                 timestamp: new Date().toISOString(),
-            });
+            }, common_1.HttpStatus.SERVICE_UNAVAILABLE);
         }
     }
 };
@@ -77,9 +74,8 @@ __decorate([
 __decorate([
     (0, common_1.Get)('ready'),
     (0, swagger_1.ApiOperation)({ summary: 'Readiness check (DB + Services)' }),
-    __param(0, (0, common_1.Res)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], AppController.prototype, "getReady", null);
 exports.AppController = AppController = __decorate([

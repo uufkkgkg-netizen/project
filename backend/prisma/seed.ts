@@ -16,9 +16,9 @@ import * as crypto from 'crypto';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-const adapter = new PrismaPg(pool);
-const prisma = new PrismaClient({ adapter } as any);
+// const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+// const adapter = new PrismaPg(pool);
+const prisma = new PrismaClient();
 
 function generateSecurePassword() {
   return crypto.randomBytes(12).toString('base64').replace(/\W/g, '') + 'A1!';

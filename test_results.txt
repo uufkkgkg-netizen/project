@@ -1,0 +1,144 @@
+
+
+--- COMMAND: curl -i -s https://femcare-backend-api.onrender.com/health
+HTTP/1.1 200 OK
+Date: Sat, 20 Jun 2026 14:33:50 GMT
+Content-Type: application/json; charset=utf-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+access-control-allow-credentials: true
+cross-origin-opener-policy: same-origin
+cross-origin-resource-policy: cross-origin
+etag: W/"d8-CRMRITKM4HRXq7GUrzVkIF80HPA"
+origin-agent-cluster: ?1
+referrer-policy: no-referrer
+rndr-id: 3d052e5b-ade8-4999
+Server: cloudflare
+strict-transport-security: max-age=31536000; includeSubDomains
+vary: Origin
+vary: Accept-Encoding
+x-content-type-options: nosniff
+x-dns-prefetch-control: off
+x-download-options: noopen
+x-frame-options: SAMEORIGIN
+x-permitted-cross-domain-policies: none
+x-ratelimit-limit-auth: 10
+x-ratelimit-limit-global: 100
+x-ratelimit-remaining-auth: 9
+x-ratelimit-remaining-global: 99
+x-ratelimit-reset-auth: 60
+x-ratelimit-reset-global: 60
+x-render-origin-server: Render
+x-xss-protection: 0
+cf-cache-status: DYNAMIC
+CF-RAY: a0eb7daa1dc0f9cd-MCT
+alt-svc: h3=":443"; ma=86400
+
+{"status":"healthy","uptime":30.959486007,"memory":{"rss":100220928,"heapTotal":25882624,"heapUsed":24219032,"external":3462578,"arrayBuffers":65670},"timestamp":"2026-06-20T14:33:50.481Z","environment":"production"}
+
+--- COMMAND: curl -i -s https://femcare-backend-api.onrender.com/ready
+HTTP/1.1 404 Not Found
+Date: Sat, 20 Jun 2026 14:33:51 GMT
+Content-Type: application/json; charset=utf-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+access-control-allow-credentials: true
+cross-origin-opener-policy: same-origin
+cross-origin-resource-policy: cross-origin
+etag: W/"44-8MQMA9236Y6qzOEInoxSro/yLdk"
+origin-agent-cluster: ?1
+referrer-policy: no-referrer
+rndr-id: 9a0c9156-24d5-44a7
+Server: cloudflare
+strict-transport-security: max-age=31536000; includeSubDomains
+vary: Origin
+vary: Accept-Encoding
+x-content-type-options: nosniff
+x-dns-prefetch-control: off
+x-download-options: noopen
+x-frame-options: SAMEORIGIN
+x-permitted-cross-domain-policies: none
+x-render-origin-server: Render
+x-xss-protection: 0
+cf-cache-status: DYNAMIC
+CF-RAY: a0eb7db13de9f9d3-MCT
+alt-svc: h3=":443"; ma=86400
+
+{"message":"Cannot GET /ready","error":"Not Found","statusCode":404}
+
+--- COMMAND: curl -i -s -X POST https://femcare-frontend-app.onrender.com/api/auth/login -H "Content-Type: application/json" -d "{\"email\":\"admin@gmail.com\",\"password\":\"123456\"}"
+HTTP/1.1 200 OK
+Date: Sat, 20 Jun 2026 14:33:56 GMT
+Content-Type: application/json; charset=utf-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+access-control-allow-credentials: true
+alt-svc: h3=":443"; ma=86400
+cf-cache-status: DYNAMIC
+cross-origin-opener-policy: same-origin
+cross-origin-resource-policy: cross-origin
+etag: W/"29d-prI73dRfKHuBFtn/+m/TmcixE4w"
+origin-agent-cluster: ?1
+referrer-policy: no-referrer
+rndr-id: 14db5159-397d-456f
+Server: cloudflare
+Set-Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkZjNhNTEwMS1mN2Y5LTQ4YjYtOGNiNC05OWI1Y2QwNzZjN2UiLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsInRlbmFudElkIjoiNDI4ZWU5YjItNTc1Zi00Nzc2LTllMjEtMzdhMzA0NWQ1MTY4Iiwicm9sZSI6IlNVUEVSX0FETUlOIiwiaXNTdXBlckFkbWluIjp0cnVlLCJpYXQiOjE3ODE5NjYwMzYsImV4cCI6MTc4MjA1MjQzNn0.7LcM07QubejCYQmyMzzzOUjNDk-S-IUOnd8i0Y67H8k; Max-Age=86400; Path=/; Expires=Sun, 21 Jun 2026 14:33:56 GMT; HttpOnly; Secure; SameSite=None
+Set-Cookie: refresh_token=cc0eb44149ed70ac61e40102cc2bb18c1d9dda1ead345960649d8e0545f7a5d5a78736cf09591382b4decbd3494a3b7b64d0d285daa73c6a051b77db7213220d; Max-Age=604800; Path=/; Expires=Sat, 27 Jun 2026 14:33:56 GMT; HttpOnly; Secure; SameSite=None
+Set-Cookie: csrf_token=08fef52fecc53fe8ed1658bed107e6e53ae45b55f4d083ffbfed07936bc274a1; Max-Age=86400; Path=/; Expires=Sun, 21 Jun 2026 14:33:56 GMT; Secure; SameSite=None
+strict-transport-security: max-age=31536000; includeSubDomains
+vary: Origin, Accept-Encoding
+x-content-type-options: nosniff
+x-dns-prefetch-control: off
+x-download-options: noopen
+x-frame-options: SAMEORIGIN
+x-permitted-cross-domain-policies: none
+x-ratelimit-limit-auth: 10
+x-ratelimit-limit-global: 100
+x-ratelimit-remaining-auth: 9
+x-ratelimit-remaining-global: 99
+x-ratelimit-reset-auth: 60
+x-ratelimit-reset-global: 60
+x-render-origin-server: cloudflare
+x-xss-protection: 0
+CF-RAY: a0eb7dbe0e2cf9d7-MCT
+
+{"access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkZjNhNTEwMS1mN2Y5LTQ4YjYtOGNiNC05OWI1Y2QwNzZjN2UiLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsInRlbmFudElkIjoiNDI4ZWU5YjItNTc1Zi00Nzc2LTllMjEtMzdhMzA0NWQ1MTY4Iiwicm9sZSI6IlNVUEVSX0FETUlOIiwiaXNTdXBlckFkbWluIjp0cnVlLCJpYXQiOjE3ODE5NjYwMzYsImV4cCI6MTc4MjA1MjQzNn0.7LcM07QubejCYQmyMzzzOUjNDk-S-IUOnd8i0Y67H8k","csrf_token":"08fef52fecc53fe8ed1658bed107e6e53ae45b55f4d083ffbfed07936bc274a1","user":{"id":"df3a5101-f7f9-48b6-8cb4-99b5cd076c7e","firstName":"Super","lastName":"Admin","email":"admin@gmail.com","tenantId":"428ee9b2-575f-4776-9e21-37a3045d5168","avatarUrl":null,"role":"SUPER_ADMIN","isSuperAdmin":true}}
+
+--- COMMAND: curl -i -s -X POST https://femcare-backend-api.onrender.com/api/auth/login -H "Content-Type: application/json" -d "{\"email\":\"admin@gmail.com\",\"password\":\"123456\"}"
+HTTP/1.1 200 OK
+Date: Sat, 20 Jun 2026 14:34:02 GMT
+Content-Type: application/json; charset=utf-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+access-control-allow-credentials: true
+cross-origin-opener-policy: same-origin
+cross-origin-resource-policy: cross-origin
+etag: W/"29d-7l/Yo2zYbKZDBaagLQHSSBadM4Y"
+origin-agent-cluster: ?1
+referrer-policy: no-referrer
+rndr-id: 1a68be83-c4b0-43be
+Server: cloudflare
+Set-Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkZjNhNTEwMS1mN2Y5LTQ4YjYtOGNiNC05OWI1Y2QwNzZjN2UiLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsInRlbmFudElkIjoiNDI4ZWU5YjItNTc1Zi00Nzc2LTllMjEtMzdhMzA0NWQ1MTY4Iiwicm9sZSI6IlNVUEVSX0FETUlOIiwiaXNTdXBlckFkbWluIjp0cnVlLCJpYXQiOjE3ODE5NjYwNDIsImV4cCI6MTc4MjA1MjQ0Mn0.jQxwCgaLfXnsdnAg1JyHqnlm5gO0mjakw4xQ3EmHhKk; Max-Age=86400; Path=/; Expires=Sun, 21 Jun 2026 14:34:02 GMT; HttpOnly; Secure; SameSite=None
+Set-Cookie: refresh_token=f16c67ccedc6fb8ca97e6ef53c1795c9a40600ebab1e5d36e8964362675c4ea1fb97b9273b1a96a7324ceb00aae6b65753c00125bc7ae4ded5a233c79680cac8; Max-Age=604800; Path=/; Expires=Sat, 27 Jun 2026 14:34:02 GMT; HttpOnly; Secure; SameSite=None
+Set-Cookie: csrf_token=4a79b0df125a5e0782b4bb1fc92e41601f87aedbf3cf70cb2ec1dd1def7123a5; Max-Age=86400; Path=/; Expires=Sun, 21 Jun 2026 14:34:02 GMT; Secure; SameSite=None
+strict-transport-security: max-age=31536000; includeSubDomains
+vary: Origin
+vary: Accept-Encoding
+x-content-type-options: nosniff
+x-dns-prefetch-control: off
+x-download-options: noopen
+x-frame-options: SAMEORIGIN
+x-permitted-cross-domain-policies: none
+x-ratelimit-limit-auth: 10
+x-ratelimit-limit-global: 100
+x-ratelimit-remaining-auth: 8
+x-ratelimit-remaining-global: 98
+x-ratelimit-reset-auth: 54
+x-ratelimit-reset-global: 54
+x-render-origin-server: Render
+x-xss-protection: 0
+cf-cache-status: DYNAMIC
+CF-RAY: a0eb7de64ab0f9cd-MCT
+alt-svc: h3=":443"; ma=86400
+
+{"access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkZjNhNTEwMS1mN2Y5LTQ4YjYtOGNiNC05OWI1Y2QwNzZjN2UiLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsInRlbmFudElkIjoiNDI4ZWU5YjItNTc1Zi00Nzc2LTllMjEtMzdhMzA0NWQ1MTY4Iiwicm9sZSI6IlNVUEVSX0FETUlOIiwiaXNTdXBlckFkbWluIjp0cnVlLCJpYXQiOjE3ODE5NjYwNDIsImV4cCI6MTc4MjA1MjQ0Mn0.jQxwCgaLfXnsdnAg1JyHqnlm5gO0mjakw4xQ3EmHhKk","csrf_token":"4a79b0df125a5e0782b4bb1fc92e41601f87aedbf3cf70cb2ec1dd1def7123a5","user":{"id":"df3a5101-f7f9-48b6-8cb4-99b5cd076c7e","firstName":"Super","lastName":"Admin","email":"admin@gmail.com","tenantId":"428ee9b2-575f-4776-9e21-37a3045d5168","avatarUrl":null,"role":"SUPER_ADMIN","isSuperAdmin":true}}

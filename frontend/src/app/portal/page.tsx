@@ -13,10 +13,8 @@ export default function PortalDashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem("portal_access_token");
         const res = await api.get("/patient-portal/dashboard", {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+          });
         setData(res.data);
       } catch (err) {
         toast.error("فشل جلب البيانات");

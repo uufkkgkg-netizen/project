@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, Res, Req, HttpCode, HttpStatus, UseGuards, UnauthorizedException } from '@nestjs/common';
+import { Controller, Post, Get, Body, Res, Req, HttpCode, HttpStatus, UseGuards, UnauthorizedException, NotFoundException } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 import { AuthService } from './auth.service';
@@ -56,7 +56,6 @@ export class AuthController {
     res.cookie('csrf_token', result.csrfToken, CSRF_COOKIE_OPTIONS);
 
     return {
-      csrf_token: result.csrfToken,
       user: result.user,
     };
   }
@@ -81,7 +80,6 @@ export class AuthController {
     res.cookie('csrf_token', result.csrfToken, CSRF_COOKIE_OPTIONS);
 
     return {
-      csrf_token: result.csrfToken,
       user: result.user,
     };
   }
@@ -130,10 +128,21 @@ export class AuthController {
     return this.authService.registerTenant(registerDto);
   }
 
-  // ── Temporary Seed Endpoint for Production ──────────────────────────────
-  @Get('seed')
-  @ApiOperation({ summary: 'Temporary endpoint to seed the production database' })
-  async seedProductionDb() {
+  // ── Seed Endpoint — SUPER_ADMIN only, non-production only ─────────────────
+  // CAUSE-5 fix: was public GET /auth/seed — now POST + guarded.
+  // In production this route returns 404 (not 403) to prevent route enumeration.
+  @Post('seed')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Seed database — SUPER_ADMIN only, non-production only' })
+  async seedProductionDb(@Req() req: Request & { user: any }) {
+    if (process.env.NODE_ENV === 'production') {
+      // Return 404 (not 403) to prevent route enumeration in production
+      throw new NotFoundException();
+    }
+    if (req.user?.role !== 'SUPER_ADMIN') {
+      throw new UnauthorizedException('SUPER_ADMIN role required');
+    }
     return this.authService.seedDatabase();
   }
 }

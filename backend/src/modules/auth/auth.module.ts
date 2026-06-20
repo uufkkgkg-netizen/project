@@ -5,17 +5,24 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from '../../core/auth/strategies/jwt.strategy';
 
+// PRE-5 / CAUSE-4: Fail-closed JWT_SECRET validation
+// If JWT_SECRET is missing OR shorter than 32 characters, the process must exit immediately.
+// A missing/weak secret is WORSE than a crash — attackers can forge tokens silently.
+function getJwtSecret(): string {
+  const secret = process.env.JWT_SECRET;
+  if (!secret || secret.length < 32) {
+    console.error('FATAL: JWT_SECRET is missing or shorter than 32 characters. Exiting with code 1.');
+    process.exit(1);
+  }
+  return secret;
+}
+
 @Module({
   imports: [
     PassportModule,
     JwtModule.register({
-      secret: (() => {
-        if (!process.env.JWT_SECRET && process.env.NODE_ENV === 'production') {
-          throw new Error('FATAL ERROR: JWT_SECRET environment variable is missing in production. Application cannot start securely.');
-        }
-        return process.env.JWT_SECRET || 'dev_secret_fallback_only_change_me_in_prod_12345';
-      })(),
-      signOptions: { expiresIn: '15m' }, // Token rotation: 15 mins for access token
+      secret: getJwtSecret(),
+      signOptions: { expiresIn: '15m' }, // Short-lived: 15 min access token
     }),
   ],
   controllers: [AuthController],

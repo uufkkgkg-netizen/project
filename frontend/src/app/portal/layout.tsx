@@ -11,8 +11,6 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
   const [patient, setPatient] = useState<any>(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("portal_access_token");
-    const patientStr = localStorage.getItem("portal_patient");
     if (!token || !patientStr) {
       router.push("/portal/login");
     } else {
@@ -23,8 +21,6 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
   if (!patient) return <div className="min-h-screen bg-slate-50 flex items-center justify-center">جاري التحقق...</div>;
 
   const handleLogout = () => {
-    localStorage.removeItem("portal_access_token");
-    localStorage.removeItem("portal_patient");
     router.push("/portal/login");
   };
 

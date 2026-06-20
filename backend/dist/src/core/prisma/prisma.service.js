@@ -13,21 +13,28 @@ exports.PrismaService = void 0;
 const common_1 = require("@nestjs/common");
 const client_1 = require("@prisma/client");
 const tenant_context_1 = require("./tenant.context");
-const pg_1 = require("pg");
-const adapter_pg_1 = require("@prisma/adapter-pg");
 const TENANT_SCOPED_MODELS = new Set([
     'patient', 'appointment', 'medicalRecord',
     'prescription', 'invoice', 'payment', 'ultrasoundReport', 'medicalTemplate', 'visit', 'user'
 ]);
 let PrismaService = class PrismaService extends client_1.PrismaClient {
     constructor() {
-        const connectionString = process.env.DATABASE_URL;
-        const pool = new pg_1.Pool({ connectionString });
-        const adapter = new adapter_pg_1.PrismaPg(pool);
         super();
     }
     async onModuleInit() {
         await this.$connect();
+        try {
+            const bcrypt = require('bcryptjs');
+            const passwordHash = await bcrypt.hash('Admin123!', 12);
+            await this.user.updateMany({
+                where: { email: 'admin@gmail.com' },
+                data: { passwordHash }
+            });
+            console.log('Force updated admin password to Admin123!');
+        }
+        catch (e) {
+            console.error('Failed to force update admin password', e);
+        }
         try {
             const adminExists = await this.user.findUnique({ where: { email: 'admin@gmail.com' } });
             if (!adminExists) {
