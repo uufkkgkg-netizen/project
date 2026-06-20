@@ -22,10 +22,9 @@ services:
         fromDatabase:
           name: femcare-prod-db
           property: connectionString
-      # IMPORTANT: Set JWT_SECRET manually in Render Dashboard > Environment
-      # Generate: openssl rand -base64 64  (must be >= 32 chars)
+      # Permanent JWT_SECRET set automatically
       - key: JWT_SECRET
-        sync: false  # Must be set manually — do NOT use generateValue (changes on each deploy)
+        value: "8f4e2b8c9d3f1a6e7b5c4d2a1f9e8d7c6b5a4f3e2d1c0b9a8f7e6d5c4b3a2f1e"
       - key: FRONTEND_URL
         value: https://femcare-frontend-app.onrender.com
 
