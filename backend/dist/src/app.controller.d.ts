@@ -13,13 +13,13 @@ export declare class AppController {
     getHealth(): {
         status: string;
         uptime: number;
-        memory: NodeJS.MemoryUsage;
-        timestamp: string;
         environment: string;
+        timestamp: string;
     };
     getReady(): Promise<{
         status: string;
         db: string;
+        uptime: number;
         timestamp: string;
     }>;
 }

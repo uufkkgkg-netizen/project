@@ -13,6 +13,7 @@ exports.PrismaService = void 0;
 const common_1 = require("@nestjs/common");
 const client_1 = require("@prisma/client");
 const tenant_context_1 = require("./tenant.context");
+const encryption_util_1 = require("../utils/encryption.util");
 const TENANT_SCOPED_MODELS = new Set([
     'patient', 'appointment', 'medicalRecord',
     'prescription', 'invoice', 'payment', 'ultrasoundReport', 'medicalTemplate', 'visit', 'user'
@@ -97,6 +98,54 @@ let PrismaService = class PrismaService extends client_1.PrismaClient {
                             return this.findFirst({ ...rest, where: { ...where, tenantId } });
                         }
                         return query(args);
+                    },
+                },
+            },
+        }).$extends({
+            query: {
+                patient: {
+                    async create({ args, query }) {
+                        if (args.data.nationalId)
+                            args.data.nationalId = (0, encryption_util_1.encrypt)(args.data.nationalId);
+                        if (args.data.medicalNotes)
+                            args.data.medicalNotes = (0, encryption_util_1.encrypt)(args.data.medicalNotes);
+                        if (args.data.medicalHistory)
+                            args.data.medicalHistory = (0, encryption_util_1.encrypt)(args.data.medicalHistory);
+                        return query(args);
+                    },
+                    async update({ args, query }) {
+                        if (args.data.nationalId && typeof args.data.nationalId === 'string')
+                            args.data.nationalId = (0, encryption_util_1.encrypt)(args.data.nationalId);
+                        if (args.data.medicalNotes && typeof args.data.medicalNotes === 'string')
+                            args.data.medicalNotes = (0, encryption_util_1.encrypt)(args.data.medicalNotes);
+                        if (args.data.medicalHistory && typeof args.data.medicalHistory === 'string')
+                            args.data.medicalHistory = (0, encryption_util_1.encrypt)(args.data.medicalHistory);
+                        return query(args);
+                    },
+                    async updateMany({ args, query }) {
+                        if (args.data.nationalId && typeof args.data.nationalId === 'string')
+                            args.data.nationalId = (0, encryption_util_1.encrypt)(args.data.nationalId);
+                        if (args.data.medicalNotes && typeof args.data.medicalNotes === 'string')
+                            args.data.medicalNotes = (0, encryption_util_1.encrypt)(args.data.medicalNotes);
+                        if (args.data.medicalHistory && typeof args.data.medicalHistory === 'string')
+                            args.data.medicalHistory = (0, encryption_util_1.encrypt)(args.data.medicalHistory);
+                        return query(args);
+                    },
+                },
+            },
+            result: {
+                patient: {
+                    nationalId: {
+                        needs: { nationalId: true },
+                        compute(patient) { return (0, encryption_util_1.decrypt)(patient.nationalId); },
+                    },
+                    medicalNotes: {
+                        needs: { medicalNotes: true },
+                        compute(patient) { return (0, encryption_util_1.decrypt)(patient.medicalNotes); },
+                    },
+                    medicalHistory: {
+                        needs: { medicalHistory: true },
+                        compute(patient) { return (0, encryption_util_1.decrypt)(patient.medicalHistory); },
                     },
                 },
             },

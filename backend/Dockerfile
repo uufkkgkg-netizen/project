@@ -26,8 +26,8 @@ RUN npm run build
 FROM node:20-alpine AS runner
 WORKDIR /app
 
-# تثبيت OpenSSL في مرحلة التشغيل أيضاً لضمان استقرار Prisma
-RUN apk add --no-cache openssl
+# تثبيت OpenSSL و postgresql-client في مرحلة التشغيل
+RUN apk add --no-cache openssl postgresql-client
 
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/package-lock.json* ./

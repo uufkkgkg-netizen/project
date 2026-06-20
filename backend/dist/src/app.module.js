@@ -31,6 +31,8 @@ const tenant_interceptor_1 = require("./core/prisma/tenant.interceptor");
 const ultrasound_reports_module_1 = require("./modules/ultrasound-reports/ultrasound-reports.module");
 const settings_module_1 = require("./modules/settings/settings.module");
 const whatsapp_module_1 = require("./whatsapp/whatsapp.module");
+const backup_module_1 = require("./core/backup/backup.module");
+const ping_service_1 = require("./core/ping/ping.service");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -66,6 +68,7 @@ exports.AppModule = AppModule = __decorate([
             ultrasound_reports_module_1.UltrasoundReportsModule,
             settings_module_1.SettingsModule,
             whatsapp_module_1.WhatsappModule,
+            backup_module_1.BackupModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [
@@ -82,6 +85,7 @@ exports.AppModule = AppModule = __decorate([
                 provide: core_1.APP_INTERCEPTOR,
                 useClass: tenant_interceptor_1.TenantInterceptor,
             },
+            ping_service_1.PingService,
         ],
     })
 ], AppModule);

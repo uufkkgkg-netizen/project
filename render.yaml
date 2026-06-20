@@ -25,6 +25,8 @@ services:
       # Permanent JWT_SECRET set automatically
       - key: JWT_SECRET
         value: "8f4e2b8c9d3f1a6e7b5c4d2a1f9e8d7c6b5a4f3e2d1c0b9a8f7e6d5c4b3a2f1e"
+      - key: ENCRYPTION_KEY
+        value: "7c70246d670bab081ac515401fc652b79d8236eb9dab015cd18b102ddaa6d3e9"
       - key: FRONTEND_URL
         value: https://femcare-frontend-app.onrender.com
 

@@ -1,6 +1,7 @@
 import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { TenantContext } from './tenant.context';
+import { encrypt, decrypt } from '../utils/encryption.util';
 
 // Models that must be scoped to a tenant (all multi-tenant clinical data)
 const TENANT_SCOPED_MODELS = new Set([
@@ -116,6 +117,46 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
             }
 
             return query(args);
+          },
+        },
+      },
+    }).$extends({
+      // ── Data Encryption at Rest ──────────────────────────────────────────────
+      query: {
+        patient: {
+          async create({ args, query }) {
+            if (args.data.nationalId) args.data.nationalId = encrypt(args.data.nationalId);
+            if (args.data.medicalNotes) args.data.medicalNotes = encrypt(args.data.medicalNotes);
+            if (args.data.medicalHistory) args.data.medicalHistory = encrypt(args.data.medicalHistory);
+            return query(args);
+          },
+          async update({ args, query }) {
+            if (args.data.nationalId && typeof args.data.nationalId === 'string') args.data.nationalId = encrypt(args.data.nationalId);
+            if (args.data.medicalNotes && typeof args.data.medicalNotes === 'string') args.data.medicalNotes = encrypt(args.data.medicalNotes);
+            if (args.data.medicalHistory && typeof args.data.medicalHistory === 'string') args.data.medicalHistory = encrypt(args.data.medicalHistory);
+            return query(args);
+          },
+          async updateMany({ args, query }) {
+            if (args.data.nationalId && typeof args.data.nationalId === 'string') args.data.nationalId = encrypt(args.data.nationalId);
+            if (args.data.medicalNotes && typeof args.data.medicalNotes === 'string') args.data.medicalNotes = encrypt(args.data.medicalNotes);
+            if (args.data.medicalHistory && typeof args.data.medicalHistory === 'string') args.data.medicalHistory = encrypt(args.data.medicalHistory);
+            return query(args);
+          },
+        },
+      },
+      result: {
+        patient: {
+          nationalId: {
+            needs: { nationalId: true },
+            compute(patient) { return decrypt(patient.nationalId); },
+          },
+          medicalNotes: {
+            needs: { medicalNotes: true },
+            compute(patient) { return decrypt(patient.medicalNotes); },
+          },
+          medicalHistory: {
+            needs: { medicalHistory: true },
+            compute(patient) { return decrypt(patient.medicalHistory); },
           },
         },
       },

@@ -13,6 +13,14 @@ const auth_controller_1 = require("./auth.controller");
 const jwt_1 = require("@nestjs/jwt");
 const passport_1 = require("@nestjs/passport");
 const jwt_strategy_1 = require("../../core/auth/strategies/jwt.strategy");
+function getJwtSecret() {
+    const secret = process.env.JWT_SECRET;
+    if (!secret || secret.length < 32) {
+        console.error('FATAL: JWT_SECRET is missing or shorter than 32 characters. Exiting with code 1.');
+        process.exit(1);
+    }
+    return secret;
+}
 let AuthModule = class AuthModule {
 };
 exports.AuthModule = AuthModule;
@@ -21,12 +29,7 @@ exports.AuthModule = AuthModule = __decorate([
         imports: [
             passport_1.PassportModule,
             jwt_1.JwtModule.register({
-                secret: (() => {
-                    if (!process.env.JWT_SECRET && process.env.NODE_ENV === 'production') {
-                        throw new Error('FATAL ERROR: JWT_SECRET environment variable is missing in production. Application cannot start securely.');
-                    }
-                    return process.env.JWT_SECRET || 'dev_secret_fallback_only_change_me_in_prod_12345';
-                })(),
+                secret: getJwtSecret(),
                 signOptions: { expiresIn: '15m' },
             }),
         ],

@@ -38,6 +38,18 @@ let PatientPortalController = class PatientPortalController {
         res.clearCookie('portal_access_token', { path: '/' });
         return { message: 'Logged out successfully' };
     }
+    async getMe(req) {
+        if (req.user.role !== 'PATIENT') {
+            throw new Error('Unauthorized');
+        }
+        return {
+            patient: {
+                id: req.user.patientId,
+                fullName: req.user.fullName,
+                tenantName: req.user.tenantName,
+            }
+        };
+    }
     getDashboard(req) {
         if (req.user.role !== 'PATIENT') {
             throw new Error('Unauthorized');
@@ -63,6 +75,16 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], PatientPortalController.prototype, "logout", null);
+__decorate([
+    (0, common_1.Get)('auth/me'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, swagger_1.ApiOperation)({ summary: 'Get current patient session' }),
+    __param(0, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], PatientPortalController.prototype, "getMe", null);
 __decorate([
     (0, common_1.Get)('dashboard'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),

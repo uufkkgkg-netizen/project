@@ -6,7 +6,6 @@ export declare class AuthController {
     private readonly authService;
     constructor(authService: AuthService);
     login(loginDto: LoginDto, req: Request, res: Response): Promise<{
-        csrf_token: string;
         user: {
             id: any;
             firstName: any;
@@ -19,7 +18,6 @@ export declare class AuthController {
         };
     }>;
     refresh(req: Request, res: Response): Promise<{
-        csrf_token: string;
         user: {
             id: any;
             firstName: any;
@@ -56,7 +54,9 @@ export declare class AuthController {
         message: string;
         tenantId: string;
     }>;
-    seedProductionDb(): Promise<{
+    seedProductionDb(req: Request & {
+        user: any;
+    }): Promise<{
         message: string;
     }>;
 }

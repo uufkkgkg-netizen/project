@@ -13,6 +13,13 @@ export declare class PatientPortalController {
     logout(res: any): Promise<{
         message: string;
     }>;
+    getMe(req: any): Promise<{
+        patient: {
+            id: any;
+            fullName: any;
+            tenantName: any;
+        };
+    }>;
     getDashboard(req: any): Promise<{
         upcomingAppointments: ({
             doctor: {

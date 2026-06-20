@@ -22,6 +22,7 @@ import { TenantInterceptor } from './core/prisma/tenant.interceptor';
 import { UltrasoundReportsModule } from './modules/ultrasound-reports/ultrasound-reports.module';
 import { SettingsModule } from './modules/settings/settings.module';
 import { WhatsappModule } from './whatsapp/whatsapp.module';
+import { BackupModule } from './core/backup/backup.module';
 import { PingService } from './core/ping/ping.service';
 
 @Module({
@@ -56,6 +57,7 @@ import { PingService } from './core/ping/ping.service';
     UltrasoundReportsModule,
     SettingsModule,
     WhatsappModule,
+    BackupModule,
   ],
   controllers: [AppController],
   providers: [

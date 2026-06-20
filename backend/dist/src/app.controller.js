@@ -31,26 +31,29 @@ let AppController = class AppController {
     }
     getHealth() {
         return {
-            status: 'healthy',
+            status: 'ok',
             uptime: process.uptime(),
-            memory: process.memoryUsage(),
-            timestamp: new Date().toISOString(),
             environment: process.env.NODE_ENV || 'development',
+            timestamp: new Date().toISOString(),
         };
     }
     async getReady() {
         try {
-            await this.prisma.$queryRaw `SELECT 1`;
+            const dbPing = this.prisma.$queryRaw `SELECT 1 AS ping`;
+            const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('DB timeout')), 5000));
+            await Promise.race([dbPing, timeout]);
             return {
                 status: 'ready',
-                db: 'connected',
+                db: 'up',
+                uptime: process.uptime(),
                 timestamp: new Date().toISOString(),
             };
         }
         catch (error) {
             throw new common_1.HttpException({
-                status: 'error',
-                message: 'Database not ready',
+                status: 'not_ready',
+                db: 'down',
+                error: error instanceof Error ? error.message : 'Unknown DB error',
                 timestamp: new Date().toISOString(),
             }, common_1.HttpStatus.SERVICE_UNAVAILABLE);
         }
@@ -59,21 +62,21 @@ let AppController = class AppController {
 exports.AppController = AppController;
 __decorate([
     (0, common_1.Get)(),
-    (0, swagger_1.ApiOperation)({ summary: 'Root health check' }),
+    (0, swagger_1.ApiOperation)({ summary: 'Root info' }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], AppController.prototype, "getRoot", null);
 __decorate([
     (0, common_1.Get)('health'),
-    (0, swagger_1.ApiOperation)({ summary: 'Liveness check endpoint for load balancers' }),
+    (0, swagger_1.ApiOperation)({ summary: 'Liveness check — process only, no DB' }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], AppController.prototype, "getHealth", null);
 __decorate([
     (0, common_1.Get)('ready'),
-    (0, swagger_1.ApiOperation)({ summary: 'Readiness check (DB + Services)' }),
+    (0, swagger_1.ApiOperation)({ summary: 'Readiness check — DB ping with 5s timeout' }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)

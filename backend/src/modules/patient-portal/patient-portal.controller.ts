@@ -40,9 +40,14 @@ export class PatientPortalController {
     if (req.user.role !== 'PATIENT') {
       throw new Error('Unauthorized');
     }
-    // Simple return of patient info
-    const dashboardData = await this.portalService.getDashboardData(req.user.patientId);
-    return { patient: dashboardData.patient };
+    // Simple return of patient info from token
+    return { 
+      patient: {
+        id: req.user.patientId,
+        fullName: req.user.fullName,
+        tenantName: req.user.tenantName,
+      }
+    };
   }
 
   @Get('dashboard')
