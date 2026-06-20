@@ -22,6 +22,7 @@ import { TenantInterceptor } from './core/prisma/tenant.interceptor';
 import { UltrasoundReportsModule } from './modules/ultrasound-reports/ultrasound-reports.module';
 import { SettingsModule } from './modules/settings/settings.module';
 import { WhatsappModule } from './whatsapp/whatsapp.module';
+import { PingService } from './core/ping/ping.service';
 
 @Module({
   imports: [
@@ -72,6 +73,7 @@ import { WhatsappModule } from './whatsapp/whatsapp.module';
       provide: APP_INTERCEPTOR,
       useClass: TenantInterceptor,
     },
+    PingService,
   ],
 })
 export class AppModule {}
